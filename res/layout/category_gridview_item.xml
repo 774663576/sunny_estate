@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dip" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="10dip"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip" >
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="110dip"
+            android:layout_height="130dip" />
+
+        <com.sunnyestate.views.MTextView
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/img_logo"
+            android:gravity="left"
+            android:text="德宝利经典巴罗莎西拉红葡萄酒"
+            android:textColor="#2a2a2a"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/txt_title"
+            android:paddingBottom="3dip"
+            android:paddingTop="3dip"
+            android:text="$880元"
+            android:textColor="@color/nomal_price_color"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/txt_price"
+            android:background="@drawable/member_background"
+            android:paddingBottom="1dip"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:text="会员"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txt_member_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView1"
+            android:layout_alignBottom="@+id/textView1"
+            android:layout_toRightOf="@+id/textView1"
+            android:paddingLeft="3dip"
+            android:text="$550元"
+            android:textColor="@color/member_price_color"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/img_sweet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="10dip"
+            android:src="@drawable/sweet3" />
+    </RelativeLayout>
+
+</RelativeLayout>

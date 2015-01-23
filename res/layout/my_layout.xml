@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="#efeff4"
+    android:background="@color/white"
     android:orientation="vertical" >
+
+    <!-- android:background="#efeff4" -->
 
     <RelativeLayout
         android:id="@+id/layout_title"
@@ -22,55 +24,57 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout_title"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_car" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:text="您还未登陆,快去登陆吧~"
+            android:textColor="#918f8f"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/btn_bg"
+            android:paddingBottom="10dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
+            android:paddingTop="10dip"
+            android:text="去登录"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/layout_title"
-        android:scrollbars="none" >
+        android:scrollbars="none"
+        android:visibility="gone" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-
-            <LinearLayout
-                android:id="@+id/layout_no_shopping"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/img_car" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dip"
-                    android:text="您还未登陆,快去登陆吧~"
-                    android:textColor="#918f8f"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btn_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dip"
-                    android:background="@drawable/btn_bg"
-                    android:paddingBottom="10dip"
-                    android:paddingLeft="20dip"
-                    android:paddingRight="20dip"
-                    android:paddingTop="10dip"
-                    android:text="去登录"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -116,7 +120,7 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/txt_user_name"
+                    android:id="@+id/txt_nick_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/layout_head"
@@ -129,7 +133,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txt_user_name"
+                    android:layout_below="@+id/txt_nick_name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dip"
                     android:background="#ecbe79"
@@ -187,14 +191,20 @@
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dip"
-                android:background="@color/category_gridview_line" />
+                android:background="@color/gridview_line" />
+            <!--  -->
 
             <View
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
+                android:layout_height="15dip"
+                android:background="#efeff4" />
+
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
                 android:layout_height="0.5dip"
-                android:layout_marginTop="15dip"
-                android:background="#cdcdcd" />
+                android:background="@color/gridview_line" />
 
             <LinearLayout
                 android:id="@+id/layout_tab"

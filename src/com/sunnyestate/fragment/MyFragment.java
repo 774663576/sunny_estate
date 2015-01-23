@@ -3,7 +3,10 @@ package com.sunnyestate.fragment;
 import java.io.File;
 import java.util.UUID;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +21,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -29,8 +34,10 @@ import com.sunnyestate.R;
 import com.sunnyestate.imagecrop.ImageFactoryActivity;
 import com.sunnyestate.popwindow.SelectPicPopwindow;
 import com.sunnyestate.popwindow.SelectPicPopwindow.SelectOnclick;
+import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.FileUtils;
 import com.sunnyestate.utils.PhotoUtils;
+import com.sunnyestate.utils.SharedUtils;
 import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.utils.Utils;
 import com.sunnyestate.utils.WigdtContorl;
@@ -46,6 +53,9 @@ public class MyFragment extends Fragment implements OnClickListener,
 	private TextView txt_title;
 	private ImageView img_dingdan;
 	private ImageView img_head_bg;
+	private ScrollView mScrollView;
+	private LinearLayout layout_login;
+	private TextView txt_nick_name;
 
 	private PersonalCenter perCenter;
 
@@ -71,9 +81,13 @@ public class MyFragment extends Fragment implements OnClickListener,
 		initView();
 		setValue();
 		initTab();
+		registerBoradcastReceiver();
 	}
 
 	private void initView() {
+		txt_nick_name = (TextView) getView().findViewById(R.id.txt_nick_name);
+		layout_login = (LinearLayout) getView().findViewById(R.id.layout_login);
+		mScrollView = (ScrollView) getView().findViewById(R.id.scrollView1);
 		img_head_bg = (ImageView) getView().findViewById(R.id.img_head_bg);
 		mVfFlipper = (ViewFlipper) getView().findViewById(R.id.viewflipper);
 		mVfFlipper.setDisplayedChild(0);
@@ -86,6 +100,11 @@ public class MyFragment extends Fragment implements OnClickListener,
 		txt_title = (TextView) getView().findViewById(R.id.txt_title);
 		img_dingdan = (ImageView) getView().findViewById(R.id.img_dingdan);
 		setListener();
+		if (SharedUtils.getIntUid() != 0) {
+			mScrollView.setVisibility(View.VISIBLE);
+		} else {
+			layout_login.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void setListener() {
@@ -105,14 +124,14 @@ public class MyFragment extends Fragment implements OnClickListener,
 	}
 
 	private void setValue() {
-		txt_jifen.setText("6540分");
+		txt_jifen.setText(SharedUtils.getScore() + "分");
+		txt_nick_name.setText(SharedUtils.getNickName());
 	}
 
 	private void setHead(Bitmap bmp, String path) {
 		if (bmp != null) {
 			img_head.setImageBitmap(bmp);
 			img_head_bg.setVisibility(View.VISIBLE);
-
 		}
 	}
 
@@ -232,4 +251,33 @@ public class MyFragment extends Fragment implements OnClickListener,
 		startActivityForResult(intent, PhotoUtils.INTENT_REQUEST_CODE_CROP);
 	}
 
+	/**
+	 * 注册该广播
+	 */
+	public void registerBoradcastReceiver() {
+		IntentFilter myIntentFilter = new IntentFilter();
+		myIntentFilter.addAction(Constants.REGISTER_SUCCESS);
+		getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
+	}
+
+	/**
+	 * 定义广播
+	 */
+	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.equals(Constants.REGISTER_SUCCESS)) {
+				mScrollView.setVisibility(View.VISIBLE);
+				layout_login.setVisibility(View.GONE);
+				txt_jifen.setText(SharedUtils.getScore() + "分");
+				txt_nick_name.setText(SharedUtils.getNickName());
+			}
+		}
+	};
+
+	public void onDestroy() {
+		super.onDestroy();
+		getActivity().unregisterReceiver(mBroadcastReceiver);
+	};
 }

@@ -1,13 +1,12 @@
 package com.sunnyestate.views;
 
-import com.sunnyestate.R;
-
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.GridView;
+
+import com.sunnyestate.R;
 
 public class ExpandGridView extends GridView {
 	private Paint paint;

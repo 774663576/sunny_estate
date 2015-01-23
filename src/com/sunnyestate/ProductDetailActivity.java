@@ -1,5 +1,9 @@
 package com.sunnyestate;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +20,14 @@ import com.sunnyestate.data.ShoppingCar;
 import com.sunnyestate.db.DBUtils;
 import com.sunnyestate.popwindow.ProduceDetailRightPopwindow;
 import com.sunnyestate.popwindow.ProduceDetailRightPopwindow.OnlistOnclick;
+import com.sunnyestate.task.ConfirmDialog;
 import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.DialogUtil;
+import com.sunnyestate.utils.SharedUtils;
 import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.utils.Utils;
+
+import fynn.app.PromptDialog;
 
 public class ProductDetailActivity extends BaseActivity {
 	private ImageView img_back;
@@ -58,7 +66,8 @@ public class ProductDetailActivity extends BaseActivity {
 		img_more = (ImageView) findViewById(R.id.img_more);
 		wb = (WebView) findViewById(R.id.webView1);
 		wb.setWebChromeClient(new WebViewClient());
-		wb.loadUrl("http://114.112.48.148:8001/app/myapi/detail.html");
+		wb.loadUrl("http://114.112.48.148:8001/app/myapi/detail.html?itemid="
+				+ detail.getId());
 		dialog = DialogUtil.createLoadingDialog(this);
 		dialog.show();
 		setListener();
@@ -125,6 +134,10 @@ public class ProductDetailActivity extends BaseActivity {
 
 			break;
 		case R.id.btn_buy:
+			if (SharedUtils.getIntUid() == 0) {
+				promptLoginDialog();
+				return;
+			}
 			if (detail == null) {
 				return;
 			}
@@ -141,13 +154,35 @@ public class ProductDetailActivity extends BaseActivity {
 			car1.setPrice(detail.getPrice());
 			car1.setMember_price(detail.getMember_price());
 			car1.setCount(buycount);
+			List<ShoppingCar> lists = new ArrayList<ShoppingCar>();
+			lists.add(car1);
 			startActivity(new Intent(this, FillOrderActivity.class).putExtra(
-					"datadetail", car1));
+					"datadetail", (Serializable) lists));
 			Utils.leftOutRightIn(this);
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void promptLoginDialog() {
+		PromptDialog.Builder dialog = DialogUtil.confirmDialog(this,
+				"您还没有登录,请先登录在继续操作", "登录", "取消", new ConfirmDialog() {
+
+					@Override
+					public void onOKClick() {
+						startActivity(new Intent(ProductDetailActivity.this,
+								LoginAndRegisterActivity.class));
+						Utils.leftOutRightIn(ProductDetailActivity.this);
+					}
+
+					@Override
+					public void onCancleClick() {
+
+					}
+				});
+		dialog.show();
+
 	}
 
 	private void changeCount(int id) {

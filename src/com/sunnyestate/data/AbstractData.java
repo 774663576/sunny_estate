@@ -2,9 +2,13 @@ package com.sunnyestate.data;
 
 import java.io.Serializable;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import android.database.sqlite.SQLiteDatabase;
 
-public abstract class AbstractData implements IData, Serializable {
+public abstract class AbstractData extends BaseData implements IData,
+		Serializable {
 
 	/**
      * 

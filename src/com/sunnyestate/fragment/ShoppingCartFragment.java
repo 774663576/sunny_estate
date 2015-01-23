@@ -1,5 +1,6 @@
 package com.sunnyestate.fragment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sunnyestate.FillOrderActivity;
+import com.sunnyestate.LoginAndRegisterActivity;
 import com.sunnyestate.R;
 import com.sunnyestate.adapter.ShoppingCarAdapter;
 import com.sunnyestate.adapter.ShoppingCarAdapter.SelectListener;
@@ -36,8 +39,14 @@ import com.sunnyestate.contentprovider.ShoppingCarProvider;
 import com.sunnyestate.data.AbstractData.Status;
 import com.sunnyestate.data.ShoppingCar;
 import com.sunnyestate.db.DBUtils;
+import com.sunnyestate.task.ConfirmDialog;
 import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.DialogUtil;
+import com.sunnyestate.utils.SharedUtils;
+import com.sunnyestate.utils.ToastUtil;
+import com.sunnyestate.utils.Utils;
+
+import fynn.app.PromptDialog;
 
 public class ShoppingCartFragment extends Fragment implements OnClickListener,
 		SelectListener {
@@ -74,6 +83,7 @@ public class ShoppingCartFragment extends Fragment implements OnClickListener,
 					btn_edit.setVisibility(View.GONE);
 					check_all.setChecked(false);
 					layout_del.setVisibility(View.GONE);
+					mListView.setVisibility(View.GONE);
 				}
 				break;
 			default:
@@ -136,6 +146,7 @@ public class ShoppingCartFragment extends Fragment implements OnClickListener,
 	}
 
 	private void setValue() {
+		txt_totlal_price.setText("￥" + "0.00");
 		adapter = new ShoppingCarAdapter(getActivity(), lists);
 		adapter.setmCallBack(this);
 		mListView.setAdapter(adapter);
@@ -231,9 +242,49 @@ public class ShoppingCartFragment extends Fragment implements OnClickListener,
 		case R.id.btn_delte:
 			delShopping();
 			break;
+		case R.id.btn_jiesuan:
+			List<ShoppingCar> selectShopping = new ArrayList<ShoppingCar>();
+			for (ShoppingCar car : lists) {
+				if (car.isSelect()) {
+					selectShopping.add(car);
+				}
+			}
+			if (selectShopping.size() == 0) {
+				ToastUtil.showToast("请选择要结算的商品");
+				return;
+			}
+			if (SharedUtils.getIntUid() == 0) {
+				promptLoginDialog();
+				return;
+			}
+
+			startActivity(new Intent(getActivity(), FillOrderActivity.class)
+					.putExtra("datadetail", (Serializable) selectShopping));
+			Utils.leftOutRightIn(getActivity());
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void promptLoginDialog() {
+		PromptDialog.Builder dialog = DialogUtil.confirmDialog(getActivity(),
+				"您还没有登录,请先登录在继续操作", "登录", "取消", new ConfirmDialog() {
+
+					@Override
+					public void onOKClick() {
+						startActivity(new Intent(getActivity(),
+								LoginAndRegisterActivity.class));
+						Utils.leftOutRightIn(getActivity());
+					}
+
+					@Override
+					public void onCancleClick() {
+
+					}
+				});
+		dialog.show();
+
 	}
 
 	private void delShopping() {
@@ -275,6 +326,7 @@ public class ShoppingCartFragment extends Fragment implements OnClickListener,
 			layout_no_shopping.setVisibility(View.GONE);
 			mListView.setVisibility(View.VISIBLE);
 			btn_edit.setVisibility(View.VISIBLE);
+			layout_jiesuan.setVisibility(View.VISIBLE);
 			if (action.equals(Constants.ADD_SHOPPING_CAR)) {
 				ShoppingCar car = (ShoppingCar) intent
 						.getSerializableExtra("shoppingcar");

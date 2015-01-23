@@ -25,7 +25,7 @@ public class LoginAndRegisterActivity extends FragmentActivity implements
 	private int currentTabIndex = -1;
 
 	private RadioGroup radioGroup;
-	private ImageView img_back;
+	private ImageView img_back; 
 
 	private LoginFragment logonFrag;
 	private RegisterFragment registerFrag;
@@ -127,4 +127,5 @@ public class LoginAndRegisterActivity extends FragmentActivity implements
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
 }

@@ -5,9 +5,7 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.AsyncQueryHandler;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,10 +13,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.sunnyestate.adapter.AddressAdapter;
-import com.sunnyestate.contentprovider.AdressProvider;
 import com.sunnyestate.data.AbstractData.Status;
 import com.sunnyestate.data.Adress;
+import com.sunnyestate.data.AdressList;
 import com.sunnyestate.db.DBUtils;
+import com.sunnyestate.enums.RetError;
+import com.sunnyestate.task.AbstractTaskPostCallBack;
+import com.sunnyestate.task.GetAddressTask;
 import com.sunnyestate.utils.DialogUtil;
 import com.sunnyestate.utils.Utils;
 
@@ -28,6 +29,7 @@ public class AdressActivity extends BaseActivity {
 	private ListView mListView;
 
 	private List<Adress> lists = new ArrayList<Adress>();
+	private AdressList adressList;
 
 	private AddressAdapter adapter;
 
@@ -39,8 +41,10 @@ public class AdressActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_adress);
+		adressList = new AdressList(0);
 		initView();
 		setValue();
+		refushData();
 	}
 
 	private void initView() {
@@ -58,69 +62,26 @@ public class AdressActivity extends BaseActivity {
 	private void setValue() {
 		adapter = new AddressAdapter(this, lists);
 		mListView.setAdapter(adapter);
-		initQuery();
 	}
 
-	private void initQuery() {
+	private void refushData() {
 		dialog = DialogUtil.createLoadingDialog(this);
 		dialog.show();
-		asyncQuery = new MyAsyncQueryHandler(this.getContentResolver());
-		String[] projection = { AdressProvider.AdressColumns.ID,
-				AdressProvider.AdressColumns.ADRESS,
-				AdressProvider.AdressColumns.ADRESS_DETAIL,
-				AdressProvider.AdressColumns.CELLPHONE,
-				AdressProvider.AdressColumns.CODE,
-				AdressProvider.AdressColumns.DEFAULT_ADRESS,
-				AdressProvider.AdressColumns.NAME, }; // 查询的列
-		asyncQuery.startQuery(0, null,
-				AdressProvider.AdressColumns.CONTENT_URI, projection, null,
-				null, null);
-	}
-
-	/**
-	 * 数据库异步查询类AsyncQueryHandler
-	 * 
-	 * 
-	 */
-	private class MyAsyncQueryHandler extends AsyncQueryHandler {
-		public MyAsyncQueryHandler(ContentResolver cr) {
-			super(cr);
-		}
-
-		/**
-		 * 查询结束的回调函数
-		 */
-		@Override
-		protected void onQueryComplete(int token, Object cookie,
-				final Cursor cursor) {
-			if (dialog != null) {
-				dialog.dismiss();
-			}
-			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
-				for (int i = 0; i < cursor.getCount(); i++) {
-					int id = cursor.getInt(0);
-					String adress = cursor.getString(1);
-					String adress_detail = cursor.getString(2);
-					String cellphone = cursor.getString(3);
-					String code = cursor.getString(4);
-					int default_adress = cursor.getInt(5);
-					String name = cursor.getString(6);
-					Adress addre = new Adress();
-					addre.setAdress(adress);
-					addre.setAdress_detail(adress_detail);
-					addre.setCellphone(cellphone);
-					addre.setCode(code);
-					addre.setDefault_adress(default_adress);
-					addre.setName(name);
-					addre.setId(id);
-					lists.add(addre);
-					cursor.moveToNext();
+		GetAddressTask task = new GetAddressTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			@Override
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
 				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				lists.addAll(adressList.getLists());
 				adapter.notifyDataSetChanged();
-			} else {
 			}
-		}
+		});
+		task.executeParallel(adressList);
 	}
 
 	@Override
@@ -135,20 +96,21 @@ public class AdressActivity extends BaseActivity {
 			adapter.notifyDataSetChanged();
 			if (lists.size() == 1) {
 				lists.get(0).setStatus(Status.UPDATE);
-				lists.get(0).setDefault_adress(1);
-				lists.get(0).write(DBUtils.getDBsa(2));
+				lists.get(0).setIsdefault(1);
+				// lists.get(0).write(DBUtils.getDBsa(2));
 			}
 		} else if (requestCode == 400) {
 			int position = data.getIntExtra("position", 0);
 			Adress adress = (Adress) data.getSerializableExtra("adress");
-			lists.get(position).setAdress(adress.getAdress());
-			lists.get(position).setAdress_detail(adress.getAdress_detail());
-			lists.get(position).setCellphone(adress.getCellphone());
-			lists.get(position).setCode(adress.getCode());
-			lists.get(position).setName(adress.getName());
+			lists.get(position).setProvincename(adress.getProvincename());
+			lists.get(position).setAreaname(adress.getAreaname());
+			lists.get(position).setDetail(adress.getDetail());
+			lists.get(position).setPhone(adress.getPhone());
+			lists.get(position).setPostcode(adress.getPostcode());
+			lists.get(position).setReceiver(adress.getReceiver());
 			adapter.notifyDataSetChanged();
-			lists.get(position).setStatus(Status.UPDATE);
-			lists.get(position).write(DBUtils.getDBsa(2));
+			// lists.get(position).setStatus(Status.UPDATE);
+			// lists.get(position).write(DBUtils.getDBsa(2));
 		}
 	}
 

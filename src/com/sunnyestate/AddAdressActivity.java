@@ -76,11 +76,11 @@ public class AddAdressActivity extends BaseActivity {
 	}
 
 	private void setValue() {
-		edit_adress.setText(adr.getAdress());
-		edit_adress_detail.setText(adr.getAdress_detail());
-		edit_cellphone.setText(adr.getCellphone());
-		edit_code.setText(adr.getCode());
-		edit_name.setText(adr.getName());
+		edit_adress.setText(adr.getProvincename() + " " + adr.getAreaname());
+		edit_adress_detail.setText(adr.getDetail());
+		edit_cellphone.setText(adr.getPhone());
+		edit_code.setText(adr.getPostcode());
+		edit_name.setText(adr.getReceiver());
 	}
 
 	@Override
@@ -105,15 +105,17 @@ public class AddAdressActivity extends BaseActivity {
 		String adress_detail = edit_adress_detail.getText().toString().trim();
 		if (name.length() == 0 || cellphone.length() == 0 || code.length() == 0
 				|| adress_str.length() == 0 || adress_detail.length() == 0) {
-			ToastUtil.showToast("请填写完整", Toast.LENGTH_SHORT);
+			ToastUtil.showToast("请填写完整");
 			return;
 		}
 		Adress adress = new Adress();
-		adress.setAdress(adress_str);
-		adress.setAdress_detail(adress_detail);
-		adress.setCellphone(cellphone);
-		adress.setCode(code);
-		adress.setName(name);
+
+		adress.setProvincename(adress_str);
+		adress.setAreaname("");
+		adress.setDetail(adress_detail);
+		adress.setPhone(cellphone);
+		adress.setPostcode(code);
+		adress.setReceiver(name);
 		Intent intent = new Intent();
 		intent.putExtra("adress", adress);
 		int requestCode = 300;

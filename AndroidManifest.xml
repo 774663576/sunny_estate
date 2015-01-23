@@ -95,6 +95,11 @@
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.sunnyestate.FindPasswordActivity"
+            android:label="@string/title_activity_find_password"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

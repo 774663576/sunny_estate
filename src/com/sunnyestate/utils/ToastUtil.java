@@ -17,4 +17,9 @@ public class ToastUtil {
 		toast.show();
 
 	}
+
+	public static void showToast(String str) {
+		showToast(str, Toast.LENGTH_SHORT);
+
+	}
 }

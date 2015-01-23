@@ -80,12 +80,12 @@ public class AddressAdapter extends BaseAdapter {
 		}
 		holder.txt_tishi.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		holder.txt_tishi.getPaint().setFakeBoldText(true);
-		holder.txt_adress.setText(lists.get(position).getAdress());
-		holder.txt_adress_detail
-				.setText(lists.get(position).getAdress_detail());
-		holder.txt_name.setText(lists.get(position).getName() + "  "
-				+ lists.get(position).getCellphone());
-		if (lists.get(position).getDefault_adress() == 1) {
+		holder.txt_adress.setText(lists.get(position).getProvincename() + " "
+				+ lists.get(position).getAreaname());
+		holder.txt_adress_detail.setText(lists.get(position).getDetail());
+		holder.txt_name.setText(lists.get(position).getReceiver() + "  "
+				+ lists.get(position).getPhone());
+		if (lists.get(position).getIsdefault() == 1) {
 			holder.txt_tishi.setText("Ä¬ÈÏµØÖ·");
 			holder.checkbox.setChecked(true);
 		} else {
@@ -121,21 +121,21 @@ public class AddressAdapter extends BaseAdapter {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.checkbox:
-				if (lists.get(position).getDefault_adress() == 1) {
-					lists.get(position).setDefault_adress(0);
-					lists.get(position).setStatus(Status.UPDATE);
-					lists.get(position).write(DBUtils.getDBsa(2));
+				if (lists.get(position).getIsdefault() == 1) {
+					lists.get(position).setIsdefault(0);
+					// lists.get(position).setStatus(Status.UPDATE);
+					// lists.get(position).write(DBUtils.getDBsa(2));
 				} else {
 					for (Adress adress : lists) {
-						if (adress.getDefault_adress() == 1) {
-							adress.setDefault_adress(0);
-							adress.setStatus(Status.UPDATE);
-							adress.write(DBUtils.getDBsa(2));
+						if (adress.getIsdefault() == 1) {
+							adress.setIsdefault(0);
+							// adress.setStatus(Status.UPDATE);
+							// adress.write(DBUtils.getDBsa(2));
 						}
 					}
-					lists.get(position).setDefault_adress(1);
-					lists.get(position).setStatus(Status.UPDATE);
-					lists.get(position).write(DBUtils.getDBsa(2));
+					lists.get(position).setIsdefault(1);
+					// lists.get(position).setStatus(Status.UPDATE);
+					// lists.get(position).write(DBUtils.getDBsa(2));
 				}
 				notifyDataSetChanged();
 				break;

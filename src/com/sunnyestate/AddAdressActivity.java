@@ -1,16 +1,27 @@
 package com.sunnyestate;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.sunnyestate.data.Adress;
-import com.sunnyestate.db.DBUtils;
+import com.sunnyestate.data.CityListData;
+import com.sunnyestate.data.Province;
+import com.sunnyestate.enums.RetError;
 import com.sunnyestate.interfaces.MyEditTextWatcher;
 import com.sunnyestate.interfaces.OnEditFocusChangeListener;
+import com.sunnyestate.popwindow.CityListPopWindow;
+import com.sunnyestate.popwindow.CityListPopWindow.SelectCity;
+import com.sunnyestate.task.AbstractTaskPostCallBack;
+import com.sunnyestate.task.AddAddressTask;
+import com.sunnyestate.task.GetCityListTask;
+import com.sunnyestate.utils.DialogUtil;
 import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.views.MyEditTextDeleteImg;
 
@@ -24,6 +35,11 @@ public class AddAdressActivity extends BaseActivity {
 	private ImageView img_back;
 	private Adress adr;
 	private int position;
+
+	private Dialog dialog;
+	private CityListPopWindow pop;
+	private CityListData cityList;
+	private List<Province> lists = new ArrayList<Province>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +70,6 @@ public class AddAdressActivity extends BaseActivity {
 		edit_adress_detail
 				.setOnFocusChangeListener(new OnEditFocusChangeListener(
 						edit_adress_detail, this));
-		edit_adress.setOnFocusChangeListener(new OnEditFocusChangeListener(
-				edit_adress, this));
 		edit_code.setOnFocusChangeListener(new OnEditFocusChangeListener(
 				edit_code, this));
 		edit_name.setOnFocusChangeListener(new OnEditFocusChangeListener(
@@ -64,14 +78,13 @@ public class AddAdressActivity extends BaseActivity {
 				edit_cellphone, this));
 		edit_adress_detail.addTextChangedListener(new MyEditTextWatcher(
 				edit_adress_detail, this));
-		edit_adress.addTextChangedListener(new MyEditTextWatcher(edit_adress,
-				this));
 		edit_code
 				.addTextChangedListener(new MyEditTextWatcher(edit_code, this));
 		edit_name
 				.addTextChangedListener(new MyEditTextWatcher(edit_name, this));
 		btn_save.setOnClickListener(this);
 		img_back.setOnClickListener(this);
+		edit_adress.setOnClickListener(this);
 
 	}
 
@@ -92,9 +105,56 @@ public class AddAdressActivity extends BaseActivity {
 		case R.id.btn_save:
 			save();
 			break;
+		case R.id.edit_adress:
+			getCityList(v);
+			break;
 		default:
 			break;
 		}
+	}
+
+	private int province_position = 0;
+	private int city_position = 0;
+	private int area_postion = 0;
+
+	private void getCityList(final View v) {
+		cityList = new CityListData();
+		dialog = DialogUtil.createLoadingDialog(this);
+		dialog.show();
+		GetCityListTask task = new GetCityListTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			@Override
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				lists = cityList.getLists();
+				pop = new CityListPopWindow(AddAdressActivity.this, v, lists);
+				pop.setmCallBack(new SelectCity() {
+					@Override
+					public void selectCity(int province_po, int city_po,
+							int area_po) {
+						province_position = province_po;
+						city_position = city_po;
+						area_postion = area_po;
+						edit_adress.setText(lists.get(province_po)
+								.getProvince_name()
+								+ " "
+								+ lists.get(province_po).getCityLists()
+										.get(city_po).getCity_name()
+								+ " "
+								+ lists.get(province_po).getCityLists()
+										.get(city_po).getAreaLists()
+										.get(area_po).getArea_name());
+					}
+				});
+				pop.show();
+			}
+		});
+		task.executeParallel(cityList);
 	}
 
 	private void save() {
@@ -108,7 +168,9 @@ public class AddAdressActivity extends BaseActivity {
 			ToastUtil.showToast("«ÎÃÓ–¥ÕÍ’˚");
 			return;
 		}
-		Adress adress = new Adress();
+		dialog = DialogUtil.createLoadingDialog(this);
+		dialog.show();
+		final Adress adress = new Adress();
 
 		adress.setProvincename(adress_str);
 		adress.setAreaname("");
@@ -116,17 +178,26 @@ public class AddAdressActivity extends BaseActivity {
 		adress.setPhone(cellphone);
 		adress.setPostcode(code);
 		adress.setReceiver(name);
-		Intent intent = new Intent();
-		intent.putExtra("adress", adress);
-		int requestCode = 300;
-		if (adr != null) {
-			intent.putExtra("position", position);
-			requestCode = 400;
-		} else {
-			adress.write(DBUtils.getDBsa(2));
-		}
-
-		setResult(requestCode, intent);
-		finishThisActivity();
+		AddAddressTask task = new AddAddressTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				Intent intent = new Intent();
+				intent.putExtra("adress", adress);
+				int requestCode = 300;
+				if (adr != null) {
+					intent.putExtra("position", position);
+					requestCode = 400;
+				}
+				setResult(requestCode, intent);
+				finishThisActivity();
+			};
+		});
+		task.executeParallel(adress);
 	}
 }

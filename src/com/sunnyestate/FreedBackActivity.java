@@ -12,6 +12,7 @@ import com.sunnyestate.enums.RetError;
 import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.FreedBackTask;
 import com.sunnyestate.utils.DialogUtil;
+import com.sunnyestate.utils.SharedUtils;
 import com.sunnyestate.utils.ToastUtil;
 
 public class FreedBackActivity extends BaseActivity {
@@ -49,6 +50,10 @@ public class FreedBackActivity extends BaseActivity {
 			finishThisActivity();
 			break;
 		case R.id.btn_submit:
+			if (SharedUtils.getIntUid() == 0) {
+				ToastUtil.showToast("ÇëÏÈµÇÂ¼");
+				return;
+			}
 			String content = edit_content.getText().toString();
 			if ("".equals(content)) {
 				return;

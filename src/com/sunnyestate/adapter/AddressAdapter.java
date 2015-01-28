@@ -3,6 +3,7 @@ package com.sunnyestate.adapter;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -20,7 +21,10 @@ import com.sunnyestate.R;
 import com.sunnyestate.data.AbstractData.Status;
 import com.sunnyestate.data.Adress;
 import com.sunnyestate.db.DBUtils;
+import com.sunnyestate.enums.RetError;
+import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.ConfirmDialog;
+import com.sunnyestate.task.SetDefaultAddressTask;
 import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.DialogUtil;
 import com.sunnyestate.utils.Utils;
@@ -123,21 +127,11 @@ public class AddressAdapter extends BaseAdapter {
 			case R.id.checkbox:
 				if (lists.get(position).getIsdefault() == 1) {
 					lists.get(position).setIsdefault(0);
-					// lists.get(position).setStatus(Status.UPDATE);
-					// lists.get(position).write(DBUtils.getDBsa(2));
+					notifyDataSetChanged();
+
 				} else {
-					for (Adress adress : lists) {
-						if (adress.getIsdefault() == 1) {
-							adress.setIsdefault(0);
-							// adress.setStatus(Status.UPDATE);
-							// adress.write(DBUtils.getDBsa(2));
-						}
-					}
-					lists.get(position).setIsdefault(1);
-					// lists.get(position).setStatus(Status.UPDATE);
-					// lists.get(position).write(DBUtils.getDBsa(2));
+					setDefaultAddress(position);
 				}
-				notifyDataSetChanged();
 				break;
 			case R.id.txt_edit:
 				((Activity) mContext).startActivityForResult(
@@ -159,6 +153,32 @@ public class AddressAdapter extends BaseAdapter {
 				break;
 			}
 		}
+	}
+
+	private void setDefaultAddress(final int position) {
+		final Dialog dialog;
+		dialog = DialogUtil.createLoadingDialog(mContext);
+		dialog.show();
+		SetDefaultAddressTask task = new SetDefaultAddressTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			@Override
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				for (Adress adress : lists) {
+					if (adress.getIsdefault() == 1) {
+						adress.setIsdefault(0);
+					}
+				}
+				lists.get(position).setIsdefault(1);
+				notifyDataSetChanged();
+			}
+		});
+		task.executeParallel(lists.get(position));
 	}
 
 	private void del(final int position) {

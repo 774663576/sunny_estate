@@ -20,13 +20,16 @@ import android.widget.TextView;
 import com.sunnyestate.adapter.FillOrderAdapter;
 import com.sunnyestate.data.Adress;
 import com.sunnyestate.data.AdressList;
+import com.sunnyestate.data.OrderData;
 import com.sunnyestate.data.ShoppingCar;
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.GetAddressTask;
+import com.sunnyestate.task.SubmitOrderTask;
 import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.DialogUtil;
 import com.sunnyestate.utils.SharedUtils;
+import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.utils.Utils;
 
 /**
@@ -178,9 +181,33 @@ public class FillOrderActivity extends BaseActivity {
 			startActivityForResult(new Intent(this, AdressActivity.class), 300);
 			Utils.leftOutRightIn(this);
 			break;
+		case R.id.btn_tijiaodingdan:
+			submitDingdan();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void submitDingdan() {
+		dialog = DialogUtil.createLoadingDialog(this);
+		dialog.show();
+		SubmitOrderTask task = new SubmitOrderTask(lists);
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			@Override
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				ToastUtil.showToast("下单成功");
+			}
+		});
+		OrderData order = new OrderData();
+		task.executeParallel(order);
+
 	}
 
 	@Override

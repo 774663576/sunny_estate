@@ -22,6 +22,14 @@
             android:text="个人中心"
             android:textColor="@color/white"
             android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/img_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/img_detail_more" />
     </RelativeLayout>
 
     <LinearLayout
@@ -35,32 +43,53 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_car" />
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:src="@drawable/my_image" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
-            android:text="您还未登陆,快去登陆吧~"
+            android:text="欢迎来到Sunny Estate"
             android:textColor="#918f8f"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="@drawable/btn_bg"
-            android:paddingBottom="10dip"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:paddingTop="10dip"
-            android:text="去登录"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:background="@drawable/btn_bg"
+                android:paddingBottom="7dip"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip"
+                android:paddingTop="7dip"
+                android:text="登录"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/btn_bg"
+                android:paddingBottom="7dip"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip"
+                android:paddingTop="7dip"
+                android:text="注册"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <ScrollView

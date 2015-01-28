@@ -1,10 +1,17 @@
 package com.sunnyestate.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class BaseData {
-	public static String getValueByTagName(Element element, String tagName) {
+	public String getValueByTagName(Element element, String tagName) {
 		NodeList nodeList = element.getElementsByTagName(tagName);
 		if (nodeList != null && nodeList.getLength() > 0) {
 			Element e = (Element) nodeList.item(0);
@@ -15,13 +22,12 @@ public class BaseData {
 		return "";
 	}
 
-	public static String getAttributeValueByTagName(Element element,
-			String tagName) {
+	public String getAttributeValueByTagName(Element element, String tagName) {
 		String s = element.getAttribute(tagName);
 		return s;
 	}
 
-	public static int getIntValueByTagName(Element element, String tagName) {
+	public int getIntValueByTagName(Element element, String tagName) {
 		String s = getValueByTagName(element, tagName);
 		if (s == "")
 			return 0;
@@ -29,7 +35,7 @@ public class BaseData {
 		return Integer.parseInt(s);
 	}
 
-	public static Float getFloatValueByTagName(Element element, String tagName) {
+	public Float getFloatValueByTagName(Element element, String tagName) {
 		String s = getValueByTagName(element, tagName);
 		if (s == "")
 			return 0f;
@@ -37,11 +43,36 @@ public class BaseData {
 		return Float.valueOf(s);
 	}
 
-	public static int getIntAttributeValueByTagName(Element element,
-			String tagName) {
+	public int getIntAttributeValueByTagName(Element element, String tagName) {
 		String s = getAttributeValueByTagName(element, tagName);
 		if (s == null || s.length() < 1)
 			return 0;
 		return Integer.parseInt(s);
+	}
+
+	public Object[] getRootElement(String result) {
+		int code = 0;
+		Element rootElement = null;
+		try {
+			InputStream inputStream = new ByteArrayInputStream(
+					result.getBytes());
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(inputStream);
+			rootElement = doc.getDocumentElement();
+			NodeList nodes = rootElement.getElementsByTagName("result");
+			if (nodes != null && nodes.getLength() > 0) {
+				Element e = (Element) nodes.item(0);
+				code = getIntValueByTagName(e, "code");
+				if (code == 0) {
+					return new Object[] { code, rootElement };
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new Object[] { -1, rootElement };
+
 	}
 }

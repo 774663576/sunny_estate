@@ -74,6 +74,7 @@ public class FindPasswordActivity extends BaseActivity {
 					return;
 				}
 				ToastUtil.showToast("密码已经发送到你的手机");
+				finishThisActivity();
 			}
 		});
 		User user = new User();

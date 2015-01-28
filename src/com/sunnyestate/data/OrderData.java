@@ -1,23 +1,16 @@
 package com.sunnyestate.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import com.sunnyestate.enums.RetError;
+import com.sunnyestate.utils.HttpClientUtil;
 import com.sunnyestate.utils.HttpUrlHelper;
 import com.sunnyestate.utils.SharedUtils;
 
 public class OrderData extends BaseData {
 	private static final String DEL_ORDER_API = "delorder.html";
+	private static final String SUBMIT_ORDER_API = "submitorder.html";
 
 	private int orderid;
 	private int addressid;
@@ -144,25 +137,32 @@ public class OrderData extends BaseData {
 			return RetError.INVALID;
 		}
 		int code = -1;
-		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
-			NodeList nodes = rootElement.getElementsByTagName("result");
-			if (nodes != null && nodes.getLength() > 0) {
-				Element e = (Element) nodes.item(0);
-				code = getIntValueByTagName(e, "code");
-				if (code == 0) {
-					return RetError.NONE;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Object[] resultArr = getRootElement(result);
+		code = (Integer) resultArr[0];
+		if (code == 0) {
+			return RetError.NONE;
 		}
-		return RetError.NONE;
+		return RetError.INVALID;
+
+	}
+
+	public RetError sumitOrder(List<ShoppingCar> lists) {
+		String post_str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+		post_str += "\n<order>";
+		post_str += "\n<userid>" + SharedUtils.getIntUid() + "</userid>";
+		post_str += "\n<addressid>" + addressid + "</addressid>";
+		post_str += "\n<itemlist>";
+		for (ShoppingCar car : lists) {
+			post_str += "\n<item id='" + car.getShopping_id() + "' num='"
+					+ car.getCount() + "'>";
+		}
+		String result = HttpClientUtil.sendToBoss(HttpUrlHelper.DEFAULT_HOST
+				+ SUBMIT_ORDER_API, post_str);
+		Object resultArr[] = getRootElement(result);
+		int code = (Integer) resultArr[0];
+		if (code == 0) {
+			return RetError.NONE;
+		}
+		return RetError.INVALID;
 	}
 }

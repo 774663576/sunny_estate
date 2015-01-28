@@ -28,13 +28,18 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.sunnyestate.LoginAndRegisterActivity;
+import com.sunnyestate.MyApplation;
 import com.sunnyestate.PersonalCentenDingDan;
 import com.sunnyestate.PersonalCenter;
 import com.sunnyestate.R;
 import com.sunnyestate.imagecrop.ImageFactoryActivity;
+import com.sunnyestate.popwindow.MyRightPopWindow;
+import com.sunnyestate.popwindow.MyRightPopWindow.OnlistOnclick;
 import com.sunnyestate.popwindow.SelectPicPopwindow;
 import com.sunnyestate.popwindow.SelectPicPopwindow.SelectOnclick;
+import com.sunnyestate.task.ConfirmDialog;
 import com.sunnyestate.utils.Constants;
+import com.sunnyestate.utils.DialogUtil;
 import com.sunnyestate.utils.FileUtils;
 import com.sunnyestate.utils.PhotoUtils;
 import com.sunnyestate.utils.SharedUtils;
@@ -43,9 +48,12 @@ import com.sunnyestate.utils.Utils;
 import com.sunnyestate.utils.WigdtContorl;
 import com.sunnyestate.views.CircularImage;
 
+import fynn.app.PromptDialog;
+
 public class MyFragment extends Fragment implements OnClickListener,
 		SelectOnclick {
 	private Button btn_login;
+	private Button btn_register;
 	private ViewFlipper mVfFlipper;
 	private TextView txt_jifen;
 	private ImageView img_select;
@@ -56,6 +64,7 @@ public class MyFragment extends Fragment implements OnClickListener,
 	private ScrollView mScrollView;
 	private LinearLayout layout_login;
 	private TextView txt_nick_name;
+	private ImageView img_more;
 
 	private PersonalCenter perCenter;
 
@@ -85,6 +94,8 @@ public class MyFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initView() {
+		btn_register = (Button) getView().findViewById(R.id.btn_register);
+		img_more = (ImageView) getView().findViewById(R.id.img_more);
 		txt_nick_name = (TextView) getView().findViewById(R.id.txt_nick_name);
 		layout_login = (LinearLayout) getView().findViewById(R.id.layout_login);
 		mScrollView = (ScrollView) getView().findViewById(R.id.scrollView1);
@@ -110,6 +121,8 @@ public class MyFragment extends Fragment implements OnClickListener,
 	private void setListener() {
 		btn_login.setOnClickListener(this);
 		img_select.setOnClickListener(this);
+		img_more.setOnClickListener(this);
+		btn_register.setOnClickListener(this);
 	}
 
 	private void initTab() {
@@ -140,7 +153,14 @@ public class MyFragment extends Fragment implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.btn_login:
 			getActivity().startActivity(
-					new Intent(getActivity(), LoginAndRegisterActivity.class));
+					new Intent(getActivity(), LoginAndRegisterActivity.class)
+							.putExtra("type", 1));
+			Utils.leftOutRightIn(getActivity());
+			break;
+		case R.id.btn_register:
+			getActivity().startActivity(
+					new Intent(getActivity(), LoginAndRegisterActivity.class)
+							.putExtra("type", 2));
 			Utils.leftOutRightIn(getActivity());
 			break;
 		case R.id.img_select:
@@ -148,9 +168,46 @@ public class MyFragment extends Fragment implements OnClickListener,
 			pic_pop.setmSelectOnclick(this);
 			pic_pop.show();
 			break;
+		case R.id.img_more:
+			showPop(v);
+			break;
 		default:
 			break;
 		}
+	}
+
+	private MyRightPopWindow pop;
+
+	private void showPop(View v) {
+		pop = new MyRightPopWindow(getActivity(), v);
+		pop.setOnlistOnclick(new OnlistOnclick() {
+
+			@Override
+			public void onclick(int position) {
+				if (position == 0) {
+					quitPrompt();
+				}
+			}
+		});
+		pop.show();
+
+	}
+
+	private void quitPrompt() {
+		PromptDialog.Builder dialog = DialogUtil.confirmDialog(getActivity(),
+				"确定要退出吗?", "确定", "取消", new ConfirmDialog() {
+					@Override
+					public void onOKClick() {
+						SharedUtils.clearData();
+						MyApplation.exit(true);
+
+					}
+
+					@Override
+					public void onCancleClick() {
+					}
+				});
+		dialog.show();
 	}
 
 	@Override

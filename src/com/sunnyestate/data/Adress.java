@@ -1,9 +1,18 @@
 package com.sunnyestate.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.sunnyestate.enums.RetError;
+import com.sunnyestate.utils.HttpUrlHelper;
+import com.sunnyestate.utils.SharedUtils;
+
 public class Adress extends AbstractData {
-	/**
-	 * 
-	 */
+	private static final String ADD_ADDRESS_API = "addaddress.html";
+	private static final String SET_DEFAULT_ADDRESS_API = "setdefaultaddress.html";
+
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String receiver = "";
@@ -114,28 +123,47 @@ public class Adress extends AbstractData {
 		this.isdefault = isdefault;
 	}
 
-	// @Override
-	// public void write(SQLiteDatabase db) {
-	// String tableName = com.sunnyestate.db.Const.ADRESS_TABLE_NAME;
-	// if (this.status == Status.DEL) {
-	// db.delete(tableName, "_id=?", new String[] { id + "" });
-	// return;
-	// }
-	// ContentValues values = new ContentValues();
-	// values.put("name", name);
-	// values.put("cellphone", cellphone);
-	// values.put("code", code);
-	// values.put("adress_detail", adress_detail);
-	// values.put("default_adress", default_adress);
-	// values.put("adress", adress);
-	// if (this.status == Status.UPDATE) {
-	// db.update(tableName, values, "_id=? ",
-	// new String[] { this.id + "" });
-	// return;
-	// }
-	// db.insert(tableName, null, values);
-	// Cursor cursor = db.rawQuery("select last_insert_rowid()", null);
-	// if (cursor.moveToFirst())
-	// id = cursor.getInt(0);
-	// }
+	public RetError addAddress() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userid", SharedUtils.getIntUid());
+		map.put("receiver", receiver);
+		map.put("phone", phone);
+		map.put("postcode", postcode);
+		map.put("provinceid", provinceid);
+		map.put("provincename", provincename);
+		map.put("cityid", cityid);
+		map.put("cityname", cityname);
+		map.put("areaid", areaid);
+		map.put("areaname", areaname);
+		map.put("detail", detail);
+		String result = HttpUrlHelper.postData(map, ADD_ADDRESS_API);
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int code = -1;
+		Object[] resultArr = getRootElement(result);
+		code = (Integer) resultArr[0];
+		if (code == 0) {
+			return RetError.NONE;
+		}
+		return RetError.INVALID;
+
+	}
+
+	public RetError setDefaultAddress() {
+		String result = HttpUrlHelper.getUrlData(SET_DEFAULT_ADDRESS_API
+				+ "?userid=" + SharedUtils.getUid() + "&addressid=" + this.id);
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int code = -1;
+		Object[] resultArr = getRootElement(result);
+		code = (Integer) resultArr[0];
+		if (code == 0) {
+			return RetError.NONE;
+		}
+		return RetError.INVALID;
+
+	}
+
 }

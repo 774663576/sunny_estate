@@ -25,20 +25,27 @@ public class LoginAndRegisterActivity extends FragmentActivity implements
 	private int currentTabIndex = -1;
 
 	private RadioGroup radioGroup;
-	private ImageView img_back; 
+	private ImageView img_back;
 
 	private LoginFragment logonFrag;
 	private RegisterFragment registerFrag;
 
 	private List<Fragment> fragmentList = new ArrayList<Fragment>();
 
+	private int type;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_and_register);
+		type = getIntent().getIntExtra("type", 1);
 		initViwe();
 		initFragment();
-		showTab(0, radioGroup);
+		if (type == 2) {
+			showTab(1, radioGroup);
+		} else {
+			showTab(0, radioGroup);
+		}
 	}
 
 	private void initViwe() {

@@ -24,24 +24,24 @@ public final class R {
 		public static final int fynn_prompt_dialog_title_bar_bg_skyblue = 0x7f02003a;
 	}
 	public static final class id {
-		public static final int btn_divider1 = 0x7f0b0061;
-		public static final int btn_divider2 = 0x7f0b0063;
-		public static final int btn_view = 0x7f0b005f;
-		public static final int button_center = 0x7f0b0062;
-		public static final int button_left = 0x7f0b0060;
-		public static final int button_right = 0x7f0b0064;
-		public static final int dialog = 0x7f0b0058;
-		public static final int layout_addview = 0x7f0b005c;
-		public static final int message = 0x7f0b005d;
-		public static final int msg_btn_divider = 0x7f0b005e;
-		public static final int title = 0x7f0b005a;
-		public static final int title_msg_divider = 0x7f0b005b;
-		public static final int titlebar = 0x7f0b0059;
+		public static final int btn_divider1 = 0x7f0b0068;
+		public static final int btn_divider2 = 0x7f0b006a;
+		public static final int btn_view = 0x7f0b0066;
+		public static final int button_center = 0x7f0b0069;
+		public static final int button_left = 0x7f0b0067;
+		public static final int button_right = 0x7f0b006b;
+		public static final int dialog = 0x7f0b005f;
+		public static final int layout_addview = 0x7f0b0063;
+		public static final int message = 0x7f0b0064;
+		public static final int msg_btn_divider = 0x7f0b0065;
+		public static final int title = 0x7f0b0061;
+		public static final int title_msg_divider = 0x7f0b0062;
+		public static final int titlebar = 0x7f0b0060;
 	}
 	public static final class layout {
-		public static final int fynn_prompt_dialog_normal = 0x7f030012;
-		public static final int fynn_prompt_dialog_titlebar = 0x7f030013;
-		public static final int fynn_prompt_dialog_titlebar_skyblue = 0x7f030014;
+		public static final int fynn_prompt_dialog_normal = 0x7f030014;
+		public static final int fynn_prompt_dialog_titlebar = 0x7f030015;
+		public static final int fynn_prompt_dialog_titlebar_skyblue = 0x7f030016;
 	}
 	public static final class style {
 		public static final int AppBaseTheme = 0x7f050000;

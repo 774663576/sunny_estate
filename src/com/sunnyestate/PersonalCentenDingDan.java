@@ -40,7 +40,9 @@ public class PersonalCentenDingDan extends PersonalCenter implements
 		super(mContext, fragment, contentRootView);
 		setValue();
 		list = new OrderList(SharedUtils.getIntUid());
-		getOrderList();
+		if (SharedUtils.getIntUid() != 0) {
+			getOrderList();
+		}
 
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
-import android.content.AsyncQueryHandler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.sunnyestate.adapter.AddressAdapter;
 import com.sunnyestate.data.AbstractData.Status;
 import com.sunnyestate.data.Adress;
 import com.sunnyestate.data.AdressList;
-import com.sunnyestate.db.DBUtils;
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.GetAddressTask;
@@ -32,8 +30,6 @@ public class AdressActivity extends BaseActivity {
 	private AdressList adressList;
 
 	private AddressAdapter adapter;
-
-	private AsyncQueryHandler asyncQuery;
 
 	private Dialog dialog;
 

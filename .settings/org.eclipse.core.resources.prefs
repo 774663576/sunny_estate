@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/com/sunnyestate/utils/CrashHandler.java=UTF-8
 encoding//src/com/sunnyestate/utils/FileUtils.java=UTF-8
+encoding//src/com/sunnyestate/utils/HttpUrlHelper.java=UTF-8
 encoding//src/com/sunnyestate/utils/PhotoUtils.java=UTF-8
 encoding//src/com/sunnyestate/utils/StringUtils.java=UTF-8
 encoding//src/com/sunnyestate/utils/WigdtContorl.java=gbk

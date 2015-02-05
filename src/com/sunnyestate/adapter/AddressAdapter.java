@@ -24,6 +24,7 @@ import com.sunnyestate.db.DBUtils;
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.ConfirmDialog;
+import com.sunnyestate.task.DelAddressTask;
 import com.sunnyestate.task.SetDefaultAddressTask;
 import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.DialogUtil;
@@ -84,10 +85,9 @@ public class AddressAdapter extends BaseAdapter {
 		}
 		holder.txt_tishi.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		holder.txt_tishi.getPaint().setFakeBoldText(true);
-		holder.txt_adress.setText(lists.get(position).getProvincename() + " "
-				+ lists.get(position).getAreaname());
-		holder.txt_adress_detail.setText(lists.get(position).getDetail());
-		holder.txt_name.setText(lists.get(position).getReceiver() + "  "
+		holder.txt_adress.setText(lists.get(position).getRegion());
+		holder.txt_adress_detail.setText(lists.get(position).getFulladdress());
+		holder.txt_name.setText(lists.get(position).getConsgneedname() + "  "
 				+ lists.get(position).getPhone());
 		if (lists.get(position).getIsdefault() == 1) {
 			holder.txt_tishi.setText("Ä¬ÈÏµØÖ·");
@@ -187,14 +187,7 @@ public class AddressAdapter extends BaseAdapter {
 
 					@Override
 					public void onOKClick() {
-						lists.get(position).setStatus(Status.DEL);
-						lists.get(position).write(DBUtils.getDBsa(2));
-						lists.remove(position);
-						notifyDataSetChanged();
-						if (lists.size() == 0) {
-							mContext.sendBroadcast(new Intent(
-									Constants.NO_ADRESS));
-						}
+						delAddress(position);
 					}
 
 					@Override
@@ -203,5 +196,28 @@ public class AddressAdapter extends BaseAdapter {
 					}
 				});
 		dialog.show();
+	}
+
+	private void delAddress(final int position) {
+		final Dialog dialog = DialogUtil.createLoadingDialog(mContext);
+		dialog.show();
+		DelAddressTask task = new DelAddressTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			@Override
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				lists.remove(position);
+				notifyDataSetChanged();
+				if (lists.size() == 0) {
+					mContext.sendBroadcast(new Intent(Constants.NO_ADRESS));
+				}
+			}
+		});
+		task.executeParallel(lists.get(position));
 	}
 }

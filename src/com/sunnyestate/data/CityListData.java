@@ -21,7 +21,7 @@ public class CityListData extends AbstractData {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String GET_CITY_LIST = "getcitylist.html";
+	private static final String GET_CITY_LIST = "cityList";
 
 	private List<Province> lists = new ArrayList<Province>();
 
@@ -34,18 +34,22 @@ public class CityListData extends AbstractData {
 	}
 
 	public RetError getCityList() {
+		RetError ret = RetError.NONE;
 		String result = HttpUrlHelper.getUrlData(GET_CITY_LIST);
 		if (result == null) {
 			return RetError.INVALID;
 		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
 			NodeList nodes = rootElement.getElementsByTagName("list");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
@@ -68,6 +72,8 @@ public class CityListData extends AbstractData {
 										e_item, "id"));
 								city.setCity_name(getAttributeValueByTagName(
 										e_item, "name"));
+								System.out.println("name:::::::::"
+										+ city.getCity_name());
 								NodeList itemNodes = e_item
 										.getElementsByTagName("area");
 								List<Area> areaList = new ArrayList<Area>();
@@ -80,6 +86,7 @@ public class CityListData extends AbstractData {
 												eItem, "id"));
 										area.setArea_name(getAttributeValueByTagName(
 												eItem, "name"));
+
 										areaList.add(area);
 									}
 
@@ -89,13 +96,16 @@ public class CityListData extends AbstractData {
 								province.setCityLists(cityList);
 							}
 						}
-						lists.add(province);
+						if (province.getCityLists().size() != 0) {
+							lists.add(province);
+						}
 					}
 				}
 				return RetError.NONE;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("e:::::::::" + e.toString());
 		}
 		return RetError.INVALID;
 	}

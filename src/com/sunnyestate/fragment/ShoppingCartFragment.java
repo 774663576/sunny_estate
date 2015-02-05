@@ -253,7 +253,7 @@ public class ShoppingCartFragment extends Fragment implements OnClickListener,
 				ToastUtil.showToast("请选择要结算的商品");
 				return;
 			}
-			if (SharedUtils.getIntUid() == 0) {
+			if ("".equals(SharedUtils.getPasswordKey())) {
 				promptLoginDialog();
 				return;
 			}
@@ -346,22 +346,22 @@ public class ShoppingCartFragment extends Fragment implements OnClickListener,
 			return;
 		}
 		int count = 0;
-		int total_price = 0;
+		float total_price = 0;
 
 		for (ShoppingCar car : lists) {
 			if (car.isSelect()) {
 				count++;
-				total_price += car.getPrice() * car.getCount();
+				total_price += car.getMember_price() * car.getCount();
 			}
 		}
 		if (count == 0) {
 			btn_jiesuan.setText("结算");
-			txt_totlal_price.setText("￥" + total_price / 100 + ".00");
+			txt_totlal_price.setText("￥" + total_price + "0");
 			total_price = 0;
 		} else {
 			layout_jiesuan.setVisibility(View.VISIBLE);
 			btn_jiesuan.setText("结算(" + count + ")");
-			txt_totlal_price.setText("￥" + total_price / 100 + ".00");
+			txt_totlal_price.setText("￥" + total_price + "0");
 		}
 	};
 

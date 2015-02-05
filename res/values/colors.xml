@@ -8,9 +8,12 @@
     <color name="title_color">#a29164</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="bg_ground">#efeff4</color>
+    <!-- <color name="bg_ground">#efeff4</color> -->
     <color name="gray">#ff7f7f7f</color>
     <color name="color_d5">#d5d5d5</color>
     <color name="button_title_shadow_color">#88000000</color>
+    <!-- <color name="province_line_border">#C7C7C7</color> -->
+    <color name="province_line_border">#C7C7C7</color>
+    <color name="bg_ground">#FFFFFF</color>
 
 </resources>

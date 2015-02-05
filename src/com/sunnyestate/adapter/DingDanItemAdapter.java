@@ -6,11 +6,13 @@ import java.util.List;
 import com.sunnyestate.R;
 import com.sunnyestate.data.OrderItem;
 import com.sunnyestate.utils.UniversalImageLoadTool;
+import com.sunnyestate.utils.Utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,11 +62,11 @@ public class DingDanItemAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		OrderItem item = itemList.get(position);
-		UniversalImageLoadTool.disPlay(item.getImageurl(), holder.img_logo,
+		UniversalImageLoadTool.disPlay(item.getCoverpath(), holder.img_logo,
 				R.drawable.img1);
-		holder.txt_count.setText("数量： " + item.getNum());
-		holder.txt_price.setText("￥" + item.getPrice() / 100 + ".00");
-		holder.txt_title.setText(item.getTitle());
+		holder.txt_count.setText("数量： " + item.getProductnun());
+		holder.txt_price.setText("￥" + item.getProduceprice() + "0");
+		holder.txt_title.setText(item.getTitleval());
 		return convertView;
 	}
 

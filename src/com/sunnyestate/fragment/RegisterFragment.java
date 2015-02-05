@@ -30,6 +30,7 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 	private MyEditTextDeleteImg edit_telphone;
 	private MyEditTextDeleteImg edit_password;
 	private MyEditTextDeleteImg edit_code;
+	private MyEditTextDeleteImg edit_username;
 	private Button btn_register;
 	private Button btn_get_code;
 
@@ -77,6 +78,8 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 		btn_get_code = (Button) getView().findViewById(R.id.btn_get_code);
 		edit_password = (MyEditTextDeleteImg) getView().findViewById(
 				R.id.edit_password);
+		edit_username = (MyEditTextDeleteImg) getView().findViewById(
+				R.id.edit_username);
 		edit_telphone = (MyEditTextDeleteImg) getView().findViewById(
 				R.id.edit_telphone);
 		edit_telphone.setTag("phone_num");
@@ -100,6 +103,10 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 				getActivity()));
 		edit_code.setOnFocusChangeListener(new OnEditFocusChangeListener(
 				edit_code, getActivity()));
+		edit_username.addTextChangedListener(new MyEditTextWatcher(
+				edit_username, getActivity()));
+		edit_username.setOnFocusChangeListener(new OnEditFocusChangeListener(
+				edit_username, getActivity()));
 
 	}
 
@@ -115,8 +122,13 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 			getCode(mobile);
 			break;
 		case R.id.btn_register:
+			String user_name = edit_username.getText().toString();
 			String pwd = edit_password.getText().toString();
 			String code = edit_code.getText().toString();
+			if ("".equals(user_name)) {
+				ToastUtil.showToast("请填写用户名");
+				return;
+			}
 			if ("".equals(pwd)) {
 				ToastUtil.showToast("请填写密码");
 				return;
@@ -125,6 +137,7 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 				ToastUtil.showToast("请填写验证码");
 				return;
 			}
+			user.setUsername(user_name);
 			register(pwd, code);
 			break;
 		default:
@@ -147,11 +160,9 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 				if (result != RetError.NONE) {
 					return;
 				}
-				SharedUtils.setUid(user.getUid() + "");
-				SharedUtils.setNickName(user.getNickname());
 				SharedUtils.setUserName(user.getUsername());
 				SharedUtils.setScore(user.getScore());
-				SharedUtils.setLevel(user.getLevel());
+				SharedUtils.setLevel(user.getLevels());
 				ToastUtil.showToast("注册成功");
 				getActivity().sendBroadcast(
 						new Intent(Constants.REGISTER_SUCCESS));
@@ -175,6 +186,7 @@ public class RegisterFragment extends Fragment implements OnClickListener {
 				if (result != RetError.NONE) {
 					return;
 				}
+				ToastUtil.showToast("验证码已发送到您的手机");
 				second = 60;
 				btn_get_code.setEnabled(false);
 				mHandler.sendEmptyMessage(0);

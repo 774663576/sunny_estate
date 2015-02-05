@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sunnyestate.ProductDetailActivity;
@@ -46,13 +47,15 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	private HomeData datas = new HomeData();
 	private MyAdapter adapter;
 	private ViewPager mViewpager;
-
+	private View line;
 	private ImageView img_logo;
 	private LinearLayout dot_layout;
 
 	private Dialog dialog;
 
 	private RelativeLayout layout;
+
+	private ScrollView mScrollView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,8 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	}
 
 	private void initView() {
+		line = (View) getView().findViewById(R.id.line);
+		mScrollView = (ScrollView) getView().findViewById(R.id.scrollView1);
 		dot_layout = (LinearLayout) getView().findViewById(R.id.dot_layout);
 		img_logo = (ImageView) getView().findViewById(R.id.img_logo);
 		Utils.getFocus(img_logo);
@@ -110,6 +115,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 				initHeader();
 				adapter = new MyAdapter();
 				mEListView.setAdapter(adapter);
+				line.setVisibility(View.VISIBLE);
 				int groupCount = mEListView.getCount();
 				for (int i = 0; i < groupCount; i++) {
 					mEListView.expandGroup(i);
@@ -181,6 +187,10 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	}
 
 	private class MyAdapter extends BaseExpandableListAdapter {
+		int mPosX;
+		int mCurrentPosX;
+		int mPosY;
+		int mCurrentPosY;
 
 		public Object getChild(int groupPosition, int childPosition) {
 			return datas.getList_categorys().get(groupPosition).getItems()
@@ -205,10 +215,50 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 				holder = new ViewChildHolder();
 				holder.gridView = (ExpandGridView) convertView
 						.findViewById(R.id.gridView1);
+				// holder.mListView = (HorizontalListView) convertView
+				// .findViewById(R.id.horizontal_listView);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewChildHolder) convertView.getTag();
 			}
+			// holder.mListView.setLayoutParams(new LinearLayout.LayoutParams(
+			// LayoutParams.MATCH_PARENT, Utils
+			// .getSecreenHeight(getActivity()) / 3 + 50));
+			// holder.mListView.setAdapter(new GridViewAdapter(datas
+			// .getList_categorys().get(groupPosition).getItems()));
+
+			// holder.mListView.setOnTouchListener(new View.OnTouchListener() {
+			//
+			// @Override
+			// public boolean onTouch(View v, MotionEvent event) {
+			// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			// mPosX = (int) event.getX();
+			// mPosY = (int) event.getY();
+			// } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			// mCurrentPosX = (int) event.getX() - mPosX;
+			// mCurrentPosY = (int) event.getY() - mPosY;
+			// mPosX = (int) event.getX();
+			// mPosY = (int) event.getY();
+			// if (mCurrentPosX - mPosX > 0
+			// && Math.abs(mCurrentPosY - mPosY) < 10) {
+			//
+			// System.out.println("aa:::::::::向右的按下位置" + mPosX
+			// + "移动位置" + mCurrentPosX);
+			//
+			// } else if (mCurrentPosX - mPosX < 0
+			// && Math.abs(mCurrentPosY - mPosY) < 10) {
+			//
+			// System.out.println("aa:::::::::向左的按下位置" + mPosX
+			// + "移动位置" + mCurrentPosX);
+			//
+			// }
+			// // mScrollView.requestDisallowInterceptTouchEvent(true);
+			// } else {
+			// // mScrollView.requestDisallowInterceptTouchEvent(false);
+			// }
+			// return false;
+			// }
+			// });
 			holder.gridView.setAdapter(new GridViewAdapter(datas
 					.getList_categorys().get(groupPosition).getItems()));
 			holder.gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -220,10 +270,10 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 							.get(groupPosition).getItems().get(position);
 					CategoryDataDetail detail = new CategoryDataDetail();
 					detail.setId(category.getId());
-					detail.setImage_url(category.getImg_url());
-					detail.setMember_price(category.getMember_price());
+					detail.setDefaultimg(category.getDefaultimg());
 					detail.setPrice(category.getPrice());
-					detail.setTitle(category.getTitle());
+					detail.setOriginalprice(category.getOriginalprice());
+					detail.setProducttile(category.getProducttile());
 					startActivity(new Intent(getActivity(),
 							ProductDetailActivity.class).putExtra(
 							"categorydatadetail", detail));
@@ -277,6 +327,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 
 	class ViewChildHolder {
 		ExpandGridView gridView;
+		// HorizontalListView mListView;
 	}
 
 	@Override
@@ -332,22 +383,31 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 						.findViewById(R.id.txt_desc);
 				holder.txt_title = (TextView) convertView
 						.findViewById(R.id.txt_title);
-				holder.img_logo.setLayoutParams(new LinearLayout.LayoutParams(
-						LayoutParams.MATCH_PARENT, Utils
-								.getSecreenHeight(getActivity()) / 3));
+				holder.item_layout = (LinearLayout) convertView
+						.findViewById(R.id.item_layout);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			holder.txt_desc.setText(items.get(position).getTitle());
-			holder.txt_title.setText(items.get(position).getBrand());
-			UniversalImageLoadTool.disPlay(items.get(position).getImg_url(),
+			holder.item_layout.setLayoutParams(new LinearLayout.LayoutParams(
+					LayoutParams.MATCH_PARENT, Utils
+							.getSecreenHeight(getActivity()) / 3 + 100));
+			holder.img_logo.setLayoutParams(new LinearLayout.LayoutParams(Utils
+					.getSecreenHeight(getActivity()) / 5, Utils
+					.getSecreenHeight(getActivity()) / 4));
+			// holder.item_layout.setLayoutParams(new LinearLayout.LayoutParams(
+			// Utils.getSecreenWidth(getActivity()) / 3,
+			// LayoutParams.MATCH_PARENT));
+			holder.txt_desc.setText(items.get(position).getProducttile());
+			holder.txt_title.setText(items.get(position).getBrandstitle());
+			UniversalImageLoadTool.disPlay(items.get(position).getDefaultimg(),
 					holder.img_logo, R.drawable.img1);
 			return convertView;
 		}
 	}
 
 	class ViewHolder {
+		LinearLayout item_layout;
 		ImageView img_logo;
 		TextView txt_title;
 		TextView txt_desc;

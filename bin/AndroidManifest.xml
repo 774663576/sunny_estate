@@ -51,6 +51,21 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+        <!-- alipay sdk begin -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
+        <!-- alipay sdk end -->
+        <activity
             android:name="com.sunnyestate.MainActivity"
             android:label="@string/title_activity_welcome"
             android:screenOrientation="portrait" >
@@ -98,6 +113,16 @@
         <activity
             android:name="com.sunnyestate.FindPasswordActivity"
             android:label="@string/title_activity_find_password"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.sunnyestate.EditPassWordActivity"
+            android:label="@string/title_activity_find_passwrod"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.sunnyestate.SelectPayActivity"
+            android:label="@string/title_activity_select_pay"
             android:screenOrientation="portrait" >
         </activity>
     </application>

@@ -2,13 +2,11 @@ package com.sunnyestate.data;
 
 public class OrderItem {
 	private int id;
-	private int td;// Μπ¶Θ
-	private int num;
-	private int price;
-	private int memberprice;
-	private String title = "";
-	private String brand = "";
-	private String imageurl = "";
+	private int productnun;
+	private float produceprice;
+	private String titleval = "";
+	private String coverpath = "";
+	private String typetitle = "";
 
 	public int getId() {
 		return id;
@@ -18,60 +16,44 @@ public class OrderItem {
 		this.id = id;
 	}
 
-	public int getTd() {
-		return td;
+	public int getProductnun() {
+		return productnun;
 	}
 
-	public void setTd(int td) {
-		this.td = td;
+	public void setProductnun(int productnun) {
+		this.productnun = productnun;
 	}
 
-	public int getNum() {
-		return num;
+	public float getProduceprice() {
+		return produceprice;
 	}
 
-	public void setNum(int num) {
-		this.num = num;
+	public void setProduceprice(float produceprice) {
+		this.produceprice = produceprice;
 	}
 
-	public int getPrice() {
-		return price;
+	public String getTitleval() {
+		return titleval;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setTitleval(String titleval) {
+		this.titleval = titleval;
 	}
 
-	public int getMemberprice() {
-		return memberprice;
+	public String getCoverpath() {
+		return coverpath;
 	}
 
-	public void setMemberprice(int memberprice) {
-		this.memberprice = memberprice;
+	public void setCoverpath(String coverpath) {
+		this.coverpath = coverpath;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getTypetitle() {
+		return typetitle;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public String getImageurl() {
-		return imageurl;
-	}
-
-	public void setImageurl(String imageurl) {
-		this.imageurl = imageurl;
+	public void setTypetitle(String typetitle) {
+		this.typetitle = typetitle;
 	}
 
 }

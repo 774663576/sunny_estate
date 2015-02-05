@@ -16,13 +16,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+import com.sunnyestate.data.User;
+import com.sunnyestate.enums.RetError;
 import com.sunnyestate.fragment.CategoryFragment;
 import com.sunnyestate.fragment.HomeFragment;
 import com.sunnyestate.fragment.MyFragment;
 import com.sunnyestate.fragment.SettingFragment;
 import com.sunnyestate.fragment.ShoppingCartFragment;
+import com.sunnyestate.task.AbstractTaskPostCallBack;
+import com.sunnyestate.task.GetUserInfoTask;
 import com.sunnyestate.utils.ClientUpgrade;
 import com.sunnyestate.utils.Constants;
+import com.sunnyestate.utils.SharedUtils;
 
 public class MainActivity extends FragmentActivity implements
 		OnCheckedChangeListener {
@@ -44,7 +49,8 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		initFragment();
 		registerBoradcastReceiver();
-		update();
+		// update();
+		getUserInfo();
 	}
 
 	private void update() {
@@ -143,4 +149,18 @@ public class MainActivity extends FragmentActivity implements
 		unregisterReceiver(mBroadcastReceiver);
 	};
 
+	private void getUserInfo() {
+		if ("".equals(SharedUtils.getPasswordKey())) {
+			return;
+		}
+		GetUserInfoTask task = new GetUserInfoTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			@Override
+			public void taskFinish(RetError result) {
+
+			}
+		});
+		User user = new User();
+		task.executeParallel(user);
+	}
 }

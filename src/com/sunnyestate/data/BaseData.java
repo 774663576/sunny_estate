@@ -45,13 +45,14 @@ public class BaseData {
 
 	public int getIntAttributeValueByTagName(Element element, String tagName) {
 		String s = getAttributeValueByTagName(element, tagName);
-		if (s == null || s.length() < 1)
+		if (s == null || s.length() < 1 || "".equals(s))
 			return 0;
 		return Integer.parseInt(s);
 	}
 
 	public Object[] getRootElement(String result) {
 		int code = 0;
+		String message = "";
 		Element rootElement = null;
 		try {
 			InputStream inputStream = new ByteArrayInputStream(
@@ -65,14 +66,15 @@ public class BaseData {
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
 				code = getIntValueByTagName(e, "code");
+				message = getValueByTagName(e, "message");
 				if (code == 0) {
-					return new Object[] { code, rootElement };
+					return new Object[] { code, rootElement, message };
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new Object[] { -1, rootElement };
+		return new Object[] { -1, rootElement, message };
 
 	}
 }

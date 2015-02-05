@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -18,12 +19,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunnyestate.R;
+import com.sunnyestate.SelectPayActivity;
 import com.sunnyestate.data.OrderData;
+import com.sunnyestate.data.OrderItem;
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.ConfirmDialog;
 import com.sunnyestate.task.DelOrderTask;
 import com.sunnyestate.utils.DialogUtil;
+import com.sunnyestate.utils.ToastUtil;
+import com.sunnyestate.utils.Utils;
 
 import fynn.app.PromptDialog;
 
@@ -86,10 +91,21 @@ public class DingDanAdapter extends BaseAdapter {
 		OrderData order = lists.get(position);
 		holder.txt_status.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		holder.txt_status.getPaint().setFakeBoldText(true);
-		holder.txt_status.setText(order.getStatusname());
+		if (order.getOrder_status() == 1) {
+			holder.txt_status.setText("等待付款");
+			holder.btn_go_pay.setVisibility(View.VISIBLE);
+			holder.btn_again_buy.setVisibility(View.GONE);
+			holder.btn_wuliu.setVisibility(View.GONE);
+		} else if (order.getOrder_status() == 4 || order.getOrder_status() == 2
+				|| order.getOrder_status() == 3) {
+			holder.txt_status.setText("完成");
+			holder.btn_go_pay.setVisibility(View.GONE);
+			holder.btn_again_buy.setVisibility(View.VISIBLE);
+			holder.btn_wuliu.setVisibility(View.VISIBLE);
+		}
 		holder.txt_fukuan.setText(Html.fromHtml("实付款:<font color=#ff4900>￥"
-				+ order.getRealcharges() / 100 + ".00</font> "));
-		holder.txt_dingdan_number.setText("订单号:" + order.getOrderid());
+				+ order.getPayprice() + "0</font> "));
+		holder.txt_dingdan_number.setText("订单号:" + order.getOrdercode());
 		holder.mListView.setAdapter(new DingDanItemAdapter(mContext, order
 				.getItemList()));
 		holder.img_del.setOnClickListener(new OnClickListener() {
@@ -99,6 +115,7 @@ public class DingDanAdapter extends BaseAdapter {
 				del(position);
 			}
 		});
+		holder.btn_go_pay.setOnClickListener(new OnClick(position));
 		return convertView;
 	}
 
@@ -112,6 +129,47 @@ public class DingDanAdapter extends BaseAdapter {
 		Button btn_wuliu;
 		Button btn_again_buy;
 		View line;
+	}
+
+	class OnClick implements OnClickListener {
+		private int position;
+
+		public OnClick(int position) {
+			this.position = position;
+		}
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.img_go_pay:
+				intentPay(position);
+				break;
+
+			default:
+				break;
+			}
+		}
+
+	}
+
+	private void intentPay(int position) {
+		String pay_body = "";
+		String pay_subject = "";
+		for (OrderItem item : lists.get(position).getItemList()) {
+			pay_body += item.getTitleval() + ",";
+		}
+		if (lists.get(position).getItemList().size() > 0) {
+			pay_subject = lists.get(position).getItemList().get(0)
+					.getTitleval()
+					+ "(共" + lists.get(position).getItemList().size() + "件)";
+			;
+		}
+		mContext.startActivity(new Intent(mContext, SelectPayActivity.class)
+				.putExtra("pay_price", lists.get(position).getPayprice())
+				.putExtra("pay_code", lists.get(position).getPaycode())
+				.putExtra("pay_subject", pay_subject)
+				.putExtra("pay_body", pay_body));
+		Utils.leftOutRightIn(mContext);
 	}
 
 	private void del(final int position) {
@@ -144,6 +202,7 @@ public class DingDanAdapter extends BaseAdapter {
 				if (result != RetError.NONE) {
 					return;
 				}
+				ToastUtil.showToast("订单已删除");
 				lists.remove(position);
 				notifyDataSetChanged();
 			}

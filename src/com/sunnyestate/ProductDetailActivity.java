@@ -23,6 +23,7 @@ import com.sunnyestate.popwindow.ProduceDetailRightPopwindow.OnlistOnclick;
 import com.sunnyestate.task.ConfirmDialog;
 import com.sunnyestate.utils.Constants;
 import com.sunnyestate.utils.DialogUtil;
+import com.sunnyestate.utils.HttpUrlHelper;
 import com.sunnyestate.utils.SharedUtils;
 import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.utils.Utils;
@@ -66,8 +67,8 @@ public class ProductDetailActivity extends BaseActivity {
 		img_more = (ImageView) findViewById(R.id.img_more);
 		wb = (WebView) findViewById(R.id.webView1);
 		wb.setWebChromeClient(new WebViewClient());
-		wb.loadUrl("http://114.112.48.148:8001/app/myapi/detail.html?itemid="
-				+ detail.getId());
+		wb.loadUrl("http://www.sunnyestate.cn/Wapi/detail/id/" + detail.getId()
+				+ "/showtype/phone" + HttpUrlHelper.getUrlParams());
 		dialog = DialogUtil.createLoadingDialog(this);
 		dialog.show();
 		setListener();
@@ -122,11 +123,11 @@ public class ProductDetailActivity extends BaseActivity {
 			}
 			ShoppingCar car = new ShoppingCar();
 			car.setShopping_id(detail.getId());
-			car.setImg_url(detail.getImage_url());
-			car.setPrice(detail.getMember_price());
-			car.setTitle(detail.getTitle());
+			car.setImg_url(detail.getDefaultimg());
+			car.setPrice(detail.getOriginalprice());
+			car.setTitle(detail.getProducttile());
 			car.setCount(count);
-			car.setMember_price(detail.getMember_price());
+			car.setMember_price(detail.getPrice());
 			car.write(DBUtils.getDBsa(2));
 			sendBroadcast(new Intent(Constants.ADD_SHOPPING_CAR).putExtra(
 					"shoppingcar", car));
@@ -134,7 +135,7 @@ public class ProductDetailActivity extends BaseActivity {
 
 			break;
 		case R.id.btn_buy:
-			if (SharedUtils.getIntUid() == 0) {
+			if ("".equals(SharedUtils.getPasswordKey())) {
 				promptLoginDialog();
 				return;
 			}
@@ -148,11 +149,11 @@ public class ProductDetailActivity extends BaseActivity {
 			}
 			ShoppingCar car1 = new ShoppingCar();
 			car1.setShopping_id(detail.getId());
-			car1.setImg_url(detail.getImage_url());
-			car1.setPrice(detail.getMember_price());
-			car1.setTitle(detail.getTitle());
+			car1.setImg_url(detail.getDefaultimg());
 			car1.setPrice(detail.getPrice());
-			car1.setMember_price(detail.getMember_price());
+			car1.setTitle(detail.getProducttile());
+			car1.setPrice(detail.getPrice());
+			car1.setMember_price(detail.getOriginalprice());
 			car1.setCount(buycount);
 			List<ShoppingCar> lists = new ArrayList<ShoppingCar>();
 			lists.add(car1);

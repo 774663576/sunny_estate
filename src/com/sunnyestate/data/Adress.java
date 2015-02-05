@@ -1,46 +1,66 @@
 package com.sunnyestate.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.utils.HttpUrlHelper;
 import com.sunnyestate.utils.SharedUtils;
 
 public class Adress extends AbstractData {
-	private static final String ADD_ADDRESS_API = "addaddress.html";
-	private static final String SET_DEFAULT_ADDRESS_API = "setdefaultaddress.html";
+	private static final String ADD_ADDRESS_API = "addressAdd";
+	private static final String SET_DEFAULT_ADDRESS_API = "addressUpdate";
+	private static final String DEL_ADDRESS_API = "addressDelById";
+	private static final String UPDATE_ADDRESS_API = "addressUpdate";
 
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private String receiver = "";
 	private String phone = "";
-	private String postcode = "";
-	private int provinceid;
-	private String provincename = "";
+	private int privenceid;
 	private int cityid;
-	private String cityname = "";
 	private int areaid;
-	private String areaname = "";
-	private String detail = "";
 	private int isdefault;
+	private String region = "";// 区域
+	private String consgneedname = "";// 收货人
+	private String fulladdress = "";// 详细地址
+	private String addtime = "";
+	private String zip = "";// 邮编
 
-	public String getProvincename() {
-		return provincename;
+	public String getZip() {
+		return zip;
 	}
 
-	public void setProvincename(String provincename) {
-		this.provincename = provincename;
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 
-	public int getCityid() {
-		return cityid;
+	public String getRegion() {
+		return region;
 	}
 
-	public void setCityid(int cityid) {
-		this.cityid = cityid;
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getConsgneedname() {
+		return consgneedname;
+	}
+
+	public void setConsgneedname(String consgneedname) {
+		this.consgneedname = consgneedname;
+	}
+
+	public String getFulladdress() {
+		return fulladdress;
+	}
+
+	public void setFulladdress(String fulladdress) {
+		this.fulladdress = fulladdress;
+	}
+
+	public String getAddtime() {
+		return addtime;
+	}
+
+	public void setAddtime(String addtime) {
+		this.addtime = addtime;
 	}
 
 	public int getId() {
@@ -51,44 +71,12 @@ public class Adress extends AbstractData {
 		this.id = id;
 	}
 
-	public String getReceiver() {
-		return receiver;
-	}
-
-	public void setReceiver(String receiver) {
-		this.receiver = receiver;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
 
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public String getPostcode() {
-		return postcode;
-	}
-
-	public void setPostcode(String postcode) {
-		this.postcode = postcode;
-	}
-
-	public int getProvinceid() {
-		return provinceid;
-	}
-
-	public void setProvinceid(int provinceid) {
-		this.provinceid = provinceid;
-	}
-
-	public String getCityname() {
-		return cityname;
-	}
-
-	public void setCityname(String cityname) {
-		this.cityname = cityname;
 	}
 
 	public int getAreaid() {
@@ -99,22 +87,6 @@ public class Adress extends AbstractData {
 		this.areaid = areaid;
 	}
 
-	public String getAreaname() {
-		return areaname;
-	}
-
-	public void setAreaname(String areaname) {
-		this.areaname = areaname;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
 	public int getIsdefault() {
 		return isdefault;
 	}
@@ -123,47 +95,110 @@ public class Adress extends AbstractData {
 		this.isdefault = isdefault;
 	}
 
-	public RetError addAddress() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userid", SharedUtils.getIntUid());
-		map.put("receiver", receiver);
-		map.put("phone", phone);
-		map.put("postcode", postcode);
-		map.put("provinceid", provinceid);
-		map.put("provincename", provincename);
-		map.put("cityid", cityid);
-		map.put("cityname", cityname);
-		map.put("areaid", areaid);
-		map.put("areaname", areaname);
-		map.put("detail", detail);
-		String result = HttpUrlHelper.postData(map, ADD_ADDRESS_API);
+	public int getPrivenceid() {
+		return privenceid;
+	}
+
+	public void setPrivenceid(int privenceid) {
+		this.privenceid = privenceid;
+	}
+
+	public int getCityid() {
+		return cityid;
+	}
+
+	public void setCityid(int cityid) {
+		this.cityid = cityid;
+	}
+
+	public RetError updateAddress() {
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(UPDATE_ADDRESS_API + "/id/"
+				+ id + "/consignee_name/" + consgneedname + "/region/" + areaid
+				+ "/zip/" + zip + "/phone/" + phone + "/is_default/" + 0
+				+ "/address/" + fulladdress + "/username/"
+				+ SharedUtils.getUserName() + "/password/"
+				+ SharedUtils.getPasswordKey());
 		if (result == null) {
 			return RetError.INVALID;
 		}
-		int code = -1;
+		int res_code = -1;
 		Object[] resultArr = getRootElement(result);
-		code = (Integer) resultArr[0];
-		if (code == 0) {
-			return RetError.NONE;
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
 		}
-		return RetError.INVALID;
+		return ret;
+	}
 
+	public RetError addAddress() {
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(ADD_ADDRESS_API
+				+ "/consignee_name/" + consgneedname + "/region/" + areaid
+				+ "/zip/" + zip + "/phone/" + phone + "/is_default/" + 0
+				+ "/address/" + fulladdress + "/username/"
+				+ SharedUtils.getUserName() + "/password/"
+				+ SharedUtils.getPasswordKey());
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		this.id = Integer.valueOf(message);
+		return ret;
 	}
 
 	public RetError setDefaultAddress() {
+		RetError ret = RetError.NONE;
+
 		String result = HttpUrlHelper.getUrlData(SET_DEFAULT_ADDRESS_API
-				+ "?userid=" + SharedUtils.getUid() + "&addressid=" + this.id);
+				+ "/id/" + this.id + "/is_default/1/username/"
+				+ SharedUtils.getUserName() + "/password/"
+				+ SharedUtils.getPasswordKey());
 		if (result == null) {
 			return RetError.INVALID;
 		}
-		int code = -1;
+		int res_code = -1;
 		Object[] resultArr = getRootElement(result);
-		code = (Integer) resultArr[0];
-		if (code == 0) {
-			return RetError.NONE;
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
 		}
-		return RetError.INVALID;
+		return ret;
 
 	}
 
+	public RetError delAddress() {
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(DEL_ADDRESS_API + "/id/"
+				+ this.id + "/username/" + SharedUtils.getUserName()
+				+ "/password/" + SharedUtils.getPasswordKey());
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		return ret;
+
+	}
 }

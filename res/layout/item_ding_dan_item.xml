@@ -19,7 +19,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="10dip"
             android:background="@drawable/img_bg"
-            android:paddingBottom="3dip"
+            android:padding="7dip"
+            android:scaleType="centerCrop"
             android:src="@drawable/img1" />
 
         <TextView

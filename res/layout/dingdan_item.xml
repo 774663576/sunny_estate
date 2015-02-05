@@ -15,8 +15,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip" >
+        android:layout_marginLeft="10dip" >
 
         <TextView
             android:id="@+id/txt_tishi"
@@ -25,7 +24,7 @@
             android:paddingBottom="8dip"
             android:paddingTop="13dip"
             android:text="完成"
-            android:textColor="@color/black"
+            android:textColor="#ff4900"
             android:textSize="18sp" />
 
         <ImageView
@@ -81,6 +80,7 @@
             android:id="@+id/img_go_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/img_wuliu"
             android:background="@drawable/frame_red_btn"
@@ -91,8 +91,7 @@
             android:src="@drawable/img_go_pay"
             android:text="去付款"
             android:textColor="#ff4f00"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/img_wuliu"

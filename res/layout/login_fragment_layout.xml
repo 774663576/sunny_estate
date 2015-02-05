@@ -11,13 +11,11 @@
         android:background="#d5d5d5" />
 
     <com.sunnyestate.views.MyEditTextDeleteImg
-        android:id="@+id/edit_telphone"
+        android:id="@+id/edit_user_name"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:background="@null"
-        android:hint="手机号"
-        android:inputType="number"
-        android:maxLength="13"
+        android:hint="用户名"
         android:paddingLeft="20dip"
         android:paddingRight="15dip"
         android:textColor="@color/black"

@@ -1,45 +1,70 @@
 package com.sunnyestate.data;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.sunnyestate.enums.RetError;
-import com.sunnyestate.utils.HttpClientUtil;
+import com.sunnyestate.utils.Base64;
 import com.sunnyestate.utils.HttpUrlHelper;
 import com.sunnyestate.utils.SharedUtils;
 
 public class OrderData extends BaseData {
-	private static final String DEL_ORDER_API = "delorder.html";
-	private static final String SUBMIT_ORDER_API = "submitorder.html";
+	private static final String DEL_ORDER_API = "orderUpdate";
+	private static final String SUBMIT_ORDER_API = "orderSubmit";
 
-	private int orderid;
-	private int addressid;
-	private int order_status;
-	private String statusname = "";
-	private String createtime = "";
-	private String paytime = "";
-	private int paytype;
-	private int deliveryprice;
-	private String deliverycorp = "";
-	private String deliveryno = "";
-	private int duecharges;// 应收价格
-	private int realcharges;// 实收价格
+	private Adress adress;
+	private int id;
+	private int order_status;// 订单状态（1创建 2支付 3发货 4完成 0订单取消 -1订单取消）
+	private float orderprice;// 订单总价
+	private float payprice;// 订单实际支付价格
+	private int isship;// 是否发货
+	private int paycode;// 支付流水
+	private String addtime = "";// 订单创建时间
+	private String paytime = "";// 支付时间
+	private String shiptime = "";// 发货时间
+	private String shipcode;// 发货信息
+	private String ordercode = "";// 订单流水号
+	private int uid;// 用户id
+	private int ttype;// 发票类型
+	private int teader;// 发票抬头
 	private List<OrderItem> itemList = new ArrayList<OrderItem>();
 
-	public int getOrderid() {
-		return orderid;
+	public Adress getAdress() {
+		return adress;
 	}
 
-	public void setOrderid(int orderid) {
-		this.orderid = orderid;
+	public void setAdress(Adress adress) {
+		this.adress = adress;
 	}
 
-	public int getAddressid() {
-		return addressid;
+	public float getPayprice() {
+		return payprice;
 	}
 
-	public void setAddressid(int addressid) {
-		this.addressid = addressid;
+	public void setPayprice(float payprice) {
+		this.payprice = payprice;
+	}
+
+	public String getShipcode() {
+		return shipcode;
+	}
+
+	public void setShipcode(String shipcode) {
+		this.shipcode = shipcode;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getOrder_status() {
@@ -50,20 +75,36 @@ public class OrderData extends BaseData {
 		this.order_status = order_status;
 	}
 
-	public String getStatusname() {
-		return statusname;
+	public float getOrderprice() {
+		return orderprice;
 	}
 
-	public void setStatusname(String statusname) {
-		this.statusname = statusname;
+	public void setOrderprice(float orderprice) {
+		this.orderprice = orderprice;
 	}
 
-	public String getCreatetime() {
-		return createtime;
+	public int getIsship() {
+		return isship;
 	}
 
-	public void setCreatetime(String createtime) {
-		this.createtime = createtime;
+	public void setIsship(int isship) {
+		this.isship = isship;
+	}
+
+	public int getPaycode() {
+		return paycode;
+	}
+
+	public void setPaycode(int paycode) {
+		this.paycode = paycode;
+	}
+
+	public String getAddtime() {
+		return addtime;
+	}
+
+	public void setAddtime(String addtime) {
+		this.addtime = addtime;
 	}
 
 	public String getPaytime() {
@@ -74,52 +115,44 @@ public class OrderData extends BaseData {
 		this.paytime = paytime;
 	}
 
-	public int getPaytype() {
-		return paytype;
+	public String getShiptime() {
+		return shiptime;
 	}
 
-	public void setPaytype(int paytype) {
-		this.paytype = paytype;
+	public void setShiptime(String shiptime) {
+		this.shiptime = shiptime;
 	}
 
-	public int getDeliveryprice() {
-		return deliveryprice;
+	public String getOrdercode() {
+		return ordercode;
 	}
 
-	public void setDeliveryprice(int deliveryprice) {
-		this.deliveryprice = deliveryprice;
+	public void setOrdercode(String ordercode) {
+		this.ordercode = ordercode;
 	}
 
-	public String getDeliverycorp() {
-		return deliverycorp;
+	public int getUid() {
+		return uid;
 	}
 
-	public void setDeliverycorp(String deliverycorp) {
-		this.deliverycorp = deliverycorp;
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 
-	public String getDeliveryno() {
-		return deliveryno;
+	public int getTtype() {
+		return ttype;
 	}
 
-	public void setDeliveryno(String deliveryno) {
-		this.deliveryno = deliveryno;
+	public void setTtype(int ttype) {
+		this.ttype = ttype;
 	}
 
-	public int getDuecharges() {
-		return duecharges;
+	public int getTeader() {
+		return teader;
 	}
 
-	public void setDuecharges(int duecharges) {
-		this.duecharges = duecharges;
-	}
-
-	public int getRealcharges() {
-		return realcharges;
-	}
-
-	public void setRealcharges(int realcharges) {
-		this.realcharges = realcharges;
+	public void setTeader(int teader) {
+		this.teader = teader;
 	}
 
 	public List<OrderItem> getItemList() {
@@ -131,37 +164,80 @@ public class OrderData extends BaseData {
 	}
 
 	public RetError delOrder() {
-		String result = HttpUrlHelper.getUrlData(DEL_ORDER_API + "?uid="
-				+ SharedUtils.getUid() + "&orderid=" + this.orderid);
+		RetError ret = RetError.NONE;
+
+		String result = HttpUrlHelper.getUrlData(DEL_ORDER_API + "/orderid/"
+				+ id + "/status/-1" + "/username/" + SharedUtils.getUserName()
+				+ "/password/" + SharedUtils.getPasswordKey());
 		if (result == null) {
 			return RetError.INVALID;
 		}
-		int code = -1;
+		int res_code = -1;
 		Object[] resultArr = getRootElement(result);
-		code = (Integer) resultArr[0];
-		if (code == 0) {
-			return RetError.NONE;
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
 		}
-		return RetError.INVALID;
+		return ret;
+	}
 
+	/**
+	 * 将数组转换为JSON格式的数据。
+	 * 
+	 * @param stoneList
+	 *            数据源
+	 * @return JSON格式的数据
+	 */
+	public JSONObject changeArrayDateToJson(List<ShoppingCar> lists) {
+		try {
+			JSONArray array = new JSONArray();
+			JSONObject object = new JSONObject();
+			int length = lists.size();
+			for (int i = 0; i < length; i++) {
+				ShoppingCar car = lists.get(i);
+				JSONObject stoneObject = new JSONObject();
+				stoneObject.put("id", car.getShopping_id());
+				stoneObject.put("num", car.getCount());
+				array.put(stoneObject);
+			}
+			object.put("carts", array);
+			object.put("address", id);
+			object.put("t_type", 0);
+			object.put("t_header", 0);
+			return object;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public RetError sumitOrder(List<ShoppingCar> lists) {
-		String post_str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-		post_str += "\n<order>";
-		post_str += "\n<userid>" + SharedUtils.getIntUid() + "</userid>";
-		post_str += "\n<addressid>" + addressid + "</addressid>";
-		post_str += "\n<itemlist>";
-		for (ShoppingCar car : lists) {
-			post_str += "\n<item id='" + car.getShopping_id() + "' num='"
-					+ car.getCount() + "'>";
-		}
-		String result = HttpClientUtil.sendToBoss(HttpUrlHelper.DEFAULT_HOST
-				+ SUBMIT_ORDER_API, post_str);
-		Object resultArr[] = getRootElement(result);
-		int code = (Integer) resultArr[0];
-		if (code == 0) {
-			return RetError.NONE;
+		RetError ret = RetError.NONE;
+
+		JSONObject object = changeArrayDateToJson(lists);
+		String result;
+		try {
+			result = HttpUrlHelper.getUrlData(SUBMIT_ORDER_API
+					+ "/ljs/"
+					+ URLEncoder.encode(Base64.toBase64(object.toString()),
+							"utf-8") + "/username/" + SharedUtils.getUserName()
+					+ "/password/" + SharedUtils.getPasswordKey());
+			int res_code = -1;
+			Object[] resultArr = getRootElement(result);
+			res_code = (Integer) resultArr[0];
+			String message = (String) resultArr[2];
+			if (res_code != 0) {
+				ret = RetError.INVALID;
+				ret.setMessage(message);
+				return ret;
+			}
+			ret.setMessage(message);
+			return ret;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 		return RetError.INVALID;
 	}

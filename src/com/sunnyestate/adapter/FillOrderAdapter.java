@@ -62,7 +62,7 @@ public class FillOrderAdapter extends BaseAdapter {
 		UniversalImageLoadTool.disPlay(detail.getImg_url(), holder.img_logo,
 				R.drawable.img1);
 		holder.txt_count.setText("ÊýÁ¿£º " + detail.getCount());
-		holder.txt_price.setText("£¤" + detail.getPrice() / 100 + ".00");
+		holder.txt_price.setText("£¤" + detail.getMember_price());
 		holder.txt_title.setText(detail.getTitle());
 		return convertView;
 	}

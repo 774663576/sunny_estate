@@ -1,14 +1,8 @@
 package com.sunnyestate.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -16,7 +10,7 @@ import com.sunnyestate.enums.RetError;
 import com.sunnyestate.utils.HttpUrlHelper;
 
 public class HomeData extends BaseData {
-	private static final String HOME_URL = "home.html";
+	private static final String HOME_URL = "getAppIndexShow";
 	private List<HomeCategory> list_categorys = new ArrayList<HomeCategory>();
 	private List<Recomment> lsitRecomments = new ArrayList<Recomment>();
 
@@ -37,19 +31,24 @@ public class HomeData extends BaseData {
 	}
 
 	public RetError refush() {
+		RetError ret = RetError.NONE;
 		String result = HttpUrlHelper.getUrlData(HOME_URL);
 		if (result == null) {
 			return RetError.INVALID;
 		}
-		InputStream inputStream = new ByteArrayInputStream(result.getBytes());
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(inputStream);
-			Element root = doc.getDocumentElement();
 			// 推荐大图
-			NodeList recommendsNodeList = root
+			NodeList recommendsNodeList = rootElement
 					.getElementsByTagName("recommends");
 			if (recommendsNodeList != null
 					&& recommendsNodeList.getLength() > 0) {
@@ -61,16 +60,21 @@ public class HomeData extends BaseData {
 					for (int i = 0; i < recommendNodeList.getLength(); i++) {
 						Element node = (Element) recommendNodeList.item(i);
 						Recomment recomment = new Recomment();
-						recomment.setId(Integer.parseInt(node
-								.getAttribute("id")));
+						String id = node.getAttribute("id");
+						if (id == null || "".equals(id)) {
+							id = "0";
+						}
+						recomment.setId(Integer.parseInt(id));
 						recomment.setTitle(node.getAttribute("title"));
 						recomment.setImg_url(node.getAttribute("imageurl"));
 						lsitRecomments.add(recomment);
+						System.out.println("result:::::::::::::::recomment:"
+								+ recomment.getTitle());
 					}
 				}
 			}
 			// 数据
-			NodeList nodes = root.getElementsByTagName("categorys");
+			NodeList nodes = rootElement.getElementsByTagName("categorys");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
 				nodes = e.getElementsByTagName("category");
@@ -91,17 +95,37 @@ public class HomeData extends BaseData {
 								HomeCategoryItem category_item = new HomeCategoryItem();
 								category_item.setId(getIntValueByTagName(eItem,
 										"id"));
-								category_item.setTitle(getValueByTagName(eItem,
-										"title"));
-								category_item.setBrand(getValueByTagName(eItem,
-										"brand"));
-								category_item.setImg_url(getValueByTagName(
-										eItem, "imageurl"));
-								category_item.setPrice(getIntValueByTagName(
+								category_item
+										.setProducttype(getIntValueByTagName(
+												eItem, "producttype"));
+								category_item.setProducttile(getValueByTagName(
+										eItem, "producttitle"));
+								category_item.setDefaultimg(getValueByTagName(
+										eItem, "defaultimg"));
+								category_item.setSmalltitle(getValueByTagName(
+										eItem, "smalltitle"));
+								category_item.setDescription(getValueByTagName(
+										eItem, "description"));
+								category_item.setPrice(getFloatValueByTagName(
 										eItem, "price"));
 								category_item
-										.setMember_price(getIntValueByTagName(
-												eItem, "memberprice"));
+										.setOriginalprice(getFloatValueByTagName(
+												eItem, "originalprice"));
+								category_item
+										.setNotproduct(getIntValueByTagName(
+												eItem, "notproduct"));
+								category_item.setBrandstitle(getValueByTagName(
+										eItem, "brandstitle"));
+								category_item.setBrands(getIntValueByTagName(
+										eItem, "brands"));
+								category_item.setSweet(getIntValueByTagName(
+										eItem, "sweet"));
+								category_item.setTypes(getIntValueByTagName(
+										eItem, "types"));
+								category_item.setIstop(getIntValueByTagName(
+										eItem, "istop"));
+								category_item.setConfiginfo(getValueByTagName(
+										eItem, "configinfo"));
 								items.add(category_item);
 							}
 						}
@@ -109,7 +133,7 @@ public class HomeData extends BaseData {
 						list_categorys.add(categoryInfo);
 					}
 				}
-				return RetError.NONE;
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

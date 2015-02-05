@@ -26,7 +26,7 @@ import com.sunnyestate.utils.Utils;
 import com.sunnyestate.views.MyEditTextDeleteImg;
 
 public class LoginFragment extends Fragment implements OnClickListener {
-	private MyEditTextDeleteImg edit_telphone;
+	private MyEditTextDeleteImg edit_user_name;
 	private MyEditTextDeleteImg edit_password;
 	private Button btn_login;
 	private Button btn_forget_password;
@@ -53,17 +53,16 @@ public class LoginFragment extends Fragment implements OnClickListener {
 		btn_login = (Button) getView().findViewById(R.id.btn_login);
 		edit_password = (MyEditTextDeleteImg) getView().findViewById(
 				R.id.edit_password);
-		edit_telphone = (MyEditTextDeleteImg) getView().findViewById(
-				R.id.edit_telphone);
-		edit_telphone.setTag("phone_num");
+		edit_user_name = (MyEditTextDeleteImg) getView().findViewById(
+				R.id.edit_user_name);
 		setListener();
 	}
 
 	private void setListener() {
-		edit_telphone.setOnFocusChangeListener(new OnEditFocusChangeListener(
-				edit_telphone, getActivity()));
-		edit_telphone.addTextChangedListener(new MyEditTextWatcher(
-				edit_telphone, getActivity()));
+		edit_user_name.setOnFocusChangeListener(new OnEditFocusChangeListener(
+				edit_user_name, getActivity()));
+		edit_user_name.addTextChangedListener(new MyEditTextWatcher(
+				edit_user_name, getActivity()));
 		edit_password.addTextChangedListener(new MyEditTextWatcher(
 				edit_password, getActivity()));
 		edit_password.setOnFocusChangeListener(new OnEditFocusChangeListener(
@@ -89,10 +88,10 @@ public class LoginFragment extends Fragment implements OnClickListener {
 	}
 
 	private void login() {
-		String mobile = edit_telphone.getText().toString();
+		String user_name = edit_user_name.getText().toString();
 		String pwd = edit_password.getText().toString();
-		if ("".equals(mobile)) {
-			ToastUtil.showToast("请输入手机号");
+		if ("".equals(user_name)) {
+			ToastUtil.showToast("请输入用户名");
 			return;
 		}
 		if ("".equals(pwd)) {
@@ -111,18 +110,18 @@ public class LoginFragment extends Fragment implements OnClickListener {
 				if (result != RetError.NONE) {
 					return;
 				}
-				SharedUtils.setUid(user.getUid() + "");
-				SharedUtils.setNickName(user.getNickname());
 				SharedUtils.setUserName(user.getUsername());
 				SharedUtils.setScore(user.getScore());
-				SharedUtils.setLevel(user.getLevel());
+				SharedUtils.setLevel(user.getLevels());
+				SharedUtils.setUserPassword(user.getPwd());
+				SharedUtils.setPasswordKey(result.getMessage());
 				ToastUtil.showToast("登录成功");
 				getActivity().sendBroadcast(
 						new Intent(Constants.REGISTER_SUCCESS));
 				getActivity().finish();
 			}
 		});
-		user.setMobile(mobile);
+		user.setUsername(user_name);
 		user.setPwd(pwd);
 		task.executeParallel(user);
 	}

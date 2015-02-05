@@ -83,6 +83,9 @@ public class CityListPopWindow implements OnClickListener {
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				city_adapter.setData(lists.get(position).getCityLists());
+				if (lists.get(position).getCityLists().size() == 0) {
+					return;
+				}
 				area_adapter.setData(lists.get(position).getCityLists().get(0)
 						.getAreaLists());
 				province_position = position;

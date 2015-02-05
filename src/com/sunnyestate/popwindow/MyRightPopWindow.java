@@ -12,6 +12,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.sunnyestate.R;
+import com.sunnyestate.utils.SharedUtils;
+import com.sunnyestate.utils.ToastUtil;
 
 public class MyRightPopWindow implements OnClickListener {
 	private PopupWindow popupWindow;
@@ -19,6 +21,7 @@ public class MyRightPopWindow implements OnClickListener {
 	private View v;
 	private View view;
 	private LinearLayout layout_exit;
+	private LinearLayout layout_edit_pwd;
 
 	private OnlistOnclick callback;
 
@@ -34,6 +37,9 @@ public class MyRightPopWindow implements OnClickListener {
 	private void initView() {
 		layout_exit = (LinearLayout) view.findViewById(R.id.layout_exit);
 		layout_exit.setOnClickListener(this);
+		layout_edit_pwd = (LinearLayout) view
+				.findViewById(R.id.layout_find_password);
+		layout_edit_pwd.setOnClickListener(this);
 	}
 
 	/**
@@ -87,7 +93,11 @@ public class MyRightPopWindow implements OnClickListener {
 		case R.id.layout_exit:
 			callback.onclick(0);
 			break;
-		case R.id.layout_share:
+		case R.id.layout_find_password:
+			if ("".equals(SharedUtils.getPasswordKey())) {
+				ToastUtil.showToast("ÇëÏÈµÇÂ¼");
+				return;
+			}
 			callback.onclick(1);
 			break;
 		default:

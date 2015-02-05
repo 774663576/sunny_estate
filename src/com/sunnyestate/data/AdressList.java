@@ -15,9 +15,10 @@ import org.w3c.dom.NodeList;
 
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.utils.HttpUrlHelper;
+import com.sunnyestate.utils.SharedUtils;
 
 public class AdressList extends BaseData {
-	private static final String GET_ADDRES_API = "getaddresslist.html";
+	private static final String GET_ADDRES_API = "addressList";
 	List<Adress> lists = new ArrayList<Adress>();
 	private int uid;
 
@@ -43,50 +44,66 @@ public class AdressList extends BaseData {
 	}
 
 	public RetError refushAddress() {
-		String result = HttpUrlHelper
-				.getUrlData(GET_ADDRES_API + "?uid=" + uid);
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(GET_ADDRES_API + "/username/"
+				+ SharedUtils.getUserName() + "/password/"
+				+ SharedUtils.getPasswordKey());
 		if (result == null) {
 			return RetError.INVALID;
 		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
 			NodeList nodes = rootElement.getElementsByTagName("list");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
-				nodes = e.getElementsByTagName("addressinfo");
+				nodes = e.getElementsByTagName("item");
 				if (nodes != null) {
 					for (int i = 0; i < nodes.getLength(); i++) {
 						e = (Element) nodes.item(i);
 						Adress adress = new Adress();
-						adress.setAreaid(getIntValueByTagName(e, "areaid"));
-						adress.setAreaname(getValueByTagName(e, "areaname"));
-						adress.setCityid(getIntValueByTagName(e, "cityid"));
-						adress.setCityname(getValueByTagName(e, "cityname"));
-						adress.setDetail(getValueByTagName(e, "detail"));
+						String regionid = getValueByTagName(e, "regionid");
+						String ids[] = regionid.split(",");
+						if (ids != null && ids.length != 0) {
+							adress.setPrivenceid(Integer.valueOf(ids[0]));
+							adress.setCityid(Integer.valueOf(ids[1]));
+							adress.setAreaid(Integer.valueOf(ids[2]));
+						}
 						adress.setId(getIntValueByTagName(e, "id"));
 						adress.setIsdefault(getIntValueByTagName(e, "isdefault"));
 						adress.setPhone(getValueByTagName(e, "phone"));
-						adress.setPostcode(getValueByTagName(e, "postcode"));
-						adress.setProvinceid(getIntValueByTagName(e,
-								"provinceid"));
-						adress.setProvincename(getValueByTagName(e,
-								"provincename"));
-						adress.setReceiver(getValueByTagName(e, "receiver"));
-						System.out.println("receive:::::::::"
-								+ adress.getReceiver());
+						adress.setAddtime(getValueByTagName(e, "addtime"));
+						adress.setConsgneedname(getValueByTagName(e,
+								"consgneename"));
+						adress.setFulladdress(getValueByTagName(e,
+								"fulladdress"));
+						adress.setZip(getValueByTagName(e, "zip"));
+						adress.setRegion(getValueByTagName(e, "region"));
+
+						// adress.setPostcode(getValueByTagName(e, "postcode"));
+						// adress.setProvinceid(getIntValueByTagName(e,
+						// "provinceid"));
+						// adress.setProvincename(getValueByTagName(e,
+						// "provincename"));
+						// adress.setReceiver(getValueByTagName(e, "receiver"));
+						// System.out.println("receive:::::::::"
+						// + adress.getReceiver());
 						lists.add(adress);
 					}
 				}
-				return RetError.NONE;
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("e::::::::" + e.toString());
 		}
 		return RetError.INVALID;
 	}

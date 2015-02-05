@@ -18,6 +18,9 @@ public class SharedUtils {
 			.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
 	private static Editor editor = sharedPreferences.edit();
 	public static final String SP_UID = "userid";
+	private static final String SP_USER_NAME = "username";
+	private static final String SP_USER_PASSWORD = "user_password";
+	private static final String SP_PASSWORD_KEY = "password_key";
 
 	public static String getString(String key, String defaultValue) {
 		return sharedPreferences.getString(key, defaultValue);
@@ -74,22 +77,32 @@ public class SharedUtils {
 	}
 
 	public static void setUserName(String value) {
-		editor.putString("username", value);
+		editor.putString(SP_USER_NAME, value);
 		editor.commit();
 	}
 
-	public String getUserName() {
-		return sharedPreferences.getString("username", "");
+	public static String getUserName() {
+		return sharedPreferences.getString(SP_USER_NAME, "");
 
 	}
 
-	public static void setNickName(String value) {
-		editor.putString("nickname", value);
+	public static void setUserPassword(String value) {
+		editor.putString(SP_USER_PASSWORD, value);
 		editor.commit();
 	}
 
-	public static String getNickName() {
-		return sharedPreferences.getString("nickname", "");
+	public static String getUserPassword() {
+		return sharedPreferences.getString(SP_USER_PASSWORD, "");
+
+	}
+
+	public static void setPasswordKey(String value) {
+		editor.putString(SP_PASSWORD_KEY, value);
+		editor.commit();
+	}
+
+	public static String getPasswordKey() {
+		return sharedPreferences.getString(SP_PASSWORD_KEY, "");
 
 	}
 
@@ -113,13 +126,13 @@ public class SharedUtils {
 
 	}
 
-	public static void setLevel(int value) {
-		editor.putInt("level", value);
+	public static void setLevel(String value) {
+		editor.putString("levels", value);
 		editor.commit();
 	}
 
-	public static int getLevel() {
-		return sharedPreferences.getInt("level", 0);
+	public static String getLevel() {
+		return sharedPreferences.getString("levels", "");
 
 	}
 

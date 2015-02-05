@@ -16,5 +16,7 @@
     <string name="title_btn_cancel">取消</string>
     <string name="title_btn_upgrade">更新</string>
     <string name="title_activity_find_password">FindPasswordActivity</string>
+    <string name="title_activity_find_passwrod">FindPasswrodActivity</string>
+    <string name="title_activity_select_pay">SelectPayActivity</string>
 
 </resources>

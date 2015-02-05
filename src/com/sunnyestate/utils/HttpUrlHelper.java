@@ -46,7 +46,9 @@ import com.sunnyestate.enums.RetError;
 public class HttpUrlHelper {
 	public static final int CONNECTION_TIMEOUT = 10 * 1000;
 	public static final int SO_TIMEOUT = 10 * 1000;
-	public static final String DEFAULT_HOST = "http://114.112.48.148:8001/app/index.php/Wapi/v1/"; // 服务器地址
+	// public static final String DEFAULT_HOST =
+	// "http://114.112.48.148:8001/app/index.php/Wapi/v1/"; // 服务器地址
+	public static final String DEFAULT_HOST = "http://www.sunnyestate.cn/Wapi/"; // 服务器地址
 
 	/**
 	 * get 提交方式 // *
@@ -57,7 +59,8 @@ public class HttpUrlHelper {
 	 */
 	public static String getUrlData(String url) {
 		try {
-			HttpGet httpRequest = new HttpGet(DEFAULT_HOST + url);
+			HttpGet httpRequest = new HttpGet(DEFAULT_HOST + url
+					+ getUrlParams());
 			System.out.println("result:::::::::::::::"
 					+ httpRequest.getURI().toString());
 
@@ -88,7 +91,7 @@ public class HttpUrlHelper {
 
 	public static String getUrlDataLoadMore(String url) {
 		try {
-			HttpGet httpRequest = new HttpGet(url);
+			HttpGet httpRequest = new HttpGet(url + getUrlParams());
 			System.out.println("result:::::::::::::::"
 					+ httpRequest.getURI().toString());
 
@@ -462,5 +465,16 @@ public class HttpUrlHelper {
 		} catch (Exception e) {
 		}
 		return result;
+	}
+
+	public static String getUrlParams() {
+		String str = "SEAPILYON";
+		str = MD5.MD5_32(str);
+		String time = System.currentTimeMillis() + "";
+		str = str.substring(0, 20) + time;
+		str = MD5.MD5_32(str);
+		StringBuilder sb = new StringBuilder(str);
+		sb.reverse();
+		return "/apikey/" + sb.toString() + "/apitime/" + time;
 	}
 }

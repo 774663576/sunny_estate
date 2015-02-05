@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.sunnyestate.MyApplation;
 import com.sunnyestate.R;
+import com.sunnyestate.db.DataBaseHelper;
 
 public class Utils {
 	public static void execCmd(String cmd) {
@@ -140,5 +141,11 @@ public class Utils {
 			e.printStackTrace();
 			return "";
 		}
+	}
+
+	/** * 按名字清除本应用数据库 * * @param context * @param dbName */
+	public static void cleanDatabaseByName(Context context) {
+		context.deleteDatabase(DataBaseHelper.DATABASE_NAME
+				+ SharedUtils.getUid());
 	}
 }

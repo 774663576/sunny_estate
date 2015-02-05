@@ -8,22 +8,14 @@ public class ShoppingCar extends AbstractData {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int shopping_id;
+	private int shopping_id; 
 	private int count;
-	private int price;
-	private int member_price;
+	private float price;
+	private float member_price;
 	private String title = "";
-	private String img_url = "";
+	private String img_url = ""; 
 	private boolean isSelect = false;
 	private boolean isEdit = false;
-
-	public int getMember_price() {
-		return member_price;
-	}
-
-	public void setMember_price(int member_price) {
-		this.member_price = member_price;
-	}
 
 	public boolean isSelect() {
 		return isSelect;
@@ -57,12 +49,20 @@ public class ShoppingCar extends AbstractData {
 		this.count = count;
 	}
 
-	public int getPrice() {
+	public float getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public float getMember_price() {
+		return member_price;
+	}
+
+	public void setMember_price(float member_price) {
+		this.member_price = member_price;
 	}
 
 	public String getTitle() {

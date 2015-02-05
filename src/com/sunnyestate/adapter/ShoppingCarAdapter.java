@@ -9,6 +9,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.sunnyestate.R;
 import com.sunnyestate.data.ShoppingCar;
 import com.sunnyestate.utils.UniversalImageLoadTool;
+import com.sunnyestate.utils.Utils;
 
 public class ShoppingCarAdapter extends BaseAdapter {
 	private List<ShoppingCar> lists = new ArrayList<ShoppingCar>();
@@ -99,8 +101,8 @@ public class ShoppingCarAdapter extends BaseAdapter {
 		holder.txt_title.setText(car.getTitle());
 		holder.txt_member_price.setText(Html
 				.fromHtml("商品价格￥<font color=#c00000>" + car.getMember_price()
-						/ 100 + ".00</font> "));
-		holder.txt_price.setText("原价:" + car.getPrice() / 100 + ".00");
+						+ "0</font> "));
+		holder.txt_price.setText("原价:" + car.getPrice() + "0");
 		holder.txt_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); // 删除线
 		if (car.isSelect()) {
 			holder.checkbox.setChecked(true);
@@ -114,6 +116,11 @@ public class ShoppingCarAdapter extends BaseAdapter {
 			holder.layout_inpupt_count.setVisibility(View.INVISIBLE);
 			holder.layout_edit.setVisibility(View.VISIBLE);
 		}
+
+		LayoutParams layoutParams = holder.img_logo.getLayoutParams();
+		layoutParams.height = Utils.getSecreenHeight(mContext) / 6;
+		layoutParams.width = Utils.getSecreenWidth(mContext) / 4;
+		holder.img_logo.setLayoutParams(layoutParams);
 		return convertView;
 	}
 

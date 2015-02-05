@@ -54,6 +54,10 @@ public class FillOrderActivity extends BaseActivity {
 	private List<ShoppingCar> lists = new ArrayList<ShoppingCar>();
 	private FillOrderAdapter adapter;
 
+	private float pay_price;
+	private String pay_subject = "";
+	private String pay_body = "";
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +98,11 @@ public class FillOrderActivity extends BaseActivity {
 		int price = 0;
 		for (ShoppingCar car : lists) {
 			count += car.getCount();
-			price += car.getPrice() / 100 * car.getCount();
+			price += car.getMember_price() * car.getCount();
+			pay_body += car.getTitle() + ",";
+		}
+		if (lists.size() > 0) {
+			pay_subject = lists.get(0).getTitle() + "(共" + lists.size() + "件)";
 		}
 		txt_heji.setText(Html.fromHtml("共" + count
 				+ "件商品,合计: <font color=#c00000>￥" + price + ".00</font> "));
@@ -102,6 +110,7 @@ public class FillOrderActivity extends BaseActivity {
 				+ ".00</font> "));
 		txt_fukuan.setText(Html.fromHtml("实付款: <font color=#c00000>￥" + price
 				+ ".00</font> "));
+		pay_price = price;
 	}
 
 	private void refushAddress() {
@@ -118,6 +127,9 @@ public class FillOrderActivity extends BaseActivity {
 				if (result != RetError.NONE) {
 					return;
 				}
+				if (adressList.getLists().size() == 0) {
+					return;
+				}
 				adress = adressList.getLists().get(0);
 				setAdressValue();
 			}
@@ -126,10 +138,9 @@ public class FillOrderActivity extends BaseActivity {
 	}
 
 	public void setAdressValue() {
-		txt_adress_detail.setText(adress.getDetail());
-		txt_adress.setText(adress.getProvincename() + " "
-				+ adress.getAreaname());
-		txt_name.setText(adress.getReceiver() + "  " + adress.getPhone());
+		txt_adress_detail.setText(adress.getFulladdress());
+		txt_adress.setText(adress.getRegion());
+		txt_name.setText(adress.getConsgneedname() + "  " + adress.getPhone());
 	}
 
 	/**
@@ -190,6 +201,10 @@ public class FillOrderActivity extends BaseActivity {
 	}
 
 	private void submitDingdan() {
+		if (adress == null) {
+			ToastUtil.showToast("请先选择地址");
+			return;
+		}
 		dialog = DialogUtil.createLoadingDialog(this);
 		dialog.show();
 		SubmitOrderTask task = new SubmitOrderTask(lists);
@@ -202,10 +217,23 @@ public class FillOrderActivity extends BaseActivity {
 				if (result != RetError.NONE) {
 					return;
 				}
+				System.out.println("pay_code:::::::::::::"
+						+ result.getMessage());
 				ToastUtil.showToast("下单成功");
+				sendBroadcast(new Intent(Constants.REFUSH_MY_ORDER_LIST));
+				startActivity(new Intent(FillOrderActivity.this,
+						SelectPayActivity.class)
+						.putExtra("pay_price", pay_price)
+						.putExtra("pay_code", result.getMessage())
+						.putExtra("pay_subject", pay_subject)
+						.putExtra("pay_body", pay_body));
+				finishThisActivity();
+				Utils.leftOutRightIn(FillOrderActivity.this);
+
 			}
 		});
 		OrderData order = new OrderData();
+		order.setId(adress.getId());
 		task.executeParallel(order);
 
 	}

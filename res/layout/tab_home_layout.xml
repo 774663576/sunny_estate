@@ -53,6 +53,12 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/gridview_line"
+                android:visibility="gone" />
             <!-- <include -->
             <!-- android:layout_width="match_parent" -->
             <!-- layout="@layout/home_header" /> -->

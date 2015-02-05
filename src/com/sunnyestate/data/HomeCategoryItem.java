@@ -2,33 +2,34 @@ package com.sunnyestate.data;
 
 public class HomeCategoryItem {
 	private int id;
-	private String title = "";
-	private String brand = "";// Æ·ÅÆ
-	private String img_url = "";
-	private int member_price;
-	private int price;
+	private int producttype;
+	private String producttile = "";
+	private String defaultimg = "";
+	private String smalltitle = "";
+	private String description = "";
+	private float price;
+	private float originalprice;// Ô­¼Û
+	private int notproduct;
+	private int brands;
+	private int sweet;
+	private int types;
+	private int istop;
+	private String configinfo = "";
+	private String brandstitle;
 
-	public String getBrand() {
-		return brand;
+	public String getBrandstitle() {
+		return brandstitle;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrandstitle(String brandstitle) {
+		this.brandstitle = brandstitle;
 	}
 
-	public int getMember_price() {
-		return member_price;
-	}
-
-	public void setMember_price(int member_price) {
-		this.member_price = member_price;
-	}
-
-	public int getPrice() {
+	public float getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 
@@ -40,20 +41,100 @@ public class HomeCategoryItem {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public int getProducttype() {
+		return producttype;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setProducttype(int producttype) {
+		this.producttype = producttype;
 	}
 
-	public String getImg_url() {
-		return img_url;
+	public String getProducttile() {
+		return producttile;
 	}
 
-	public void setImg_url(String img_url) {
-		this.img_url = img_url;
+	public void setProducttile(String producttile) {
+		this.producttile = producttile;
+	}
+
+	public String getDefaultimg() {
+		return defaultimg;
+	}
+
+	public void setDefaultimg(String defaultimg) {
+		this.defaultimg = defaultimg;
+	}
+
+	public String getSmalltitle() {
+		return smalltitle;
+	}
+
+	public void setSmalltitle(String smalltitle) {
+		this.smalltitle = smalltitle;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public float getOriginalprice() {
+		return originalprice;
+	}
+
+	public void setOriginalprice(float originalprice) {
+		this.originalprice = originalprice;
+	}
+
+	public int getNotproduct() {
+		return notproduct;
+	}
+
+	public void setNotproduct(int notproduct) {
+		this.notproduct = notproduct;
+	}
+
+	public int getBrands() {
+		return brands;
+	}
+
+	public void setBrands(int brands) {
+		this.brands = brands;
+	}
+
+	public int getSweet() {
+		return sweet;
+	}
+
+	public void setSweet(int sweet) {
+		this.sweet = sweet;
+	}
+
+	public int getTypes() {
+		return types;
+	}
+
+	public void setTypes(int types) {
+		this.types = types;
+	}
+
+	public int getIstop() {
+		return istop;
+	}
+
+	public void setIstop(int istop) {
+		this.istop = istop;
+	}
+
+	public String getConfiginfo() {
+		return configinfo;
+	}
+
+	public void setConfiginfo(String configinfo) {
+		this.configinfo = configinfo;
 	}
 
 }

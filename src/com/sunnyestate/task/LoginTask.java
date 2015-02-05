@@ -10,6 +10,7 @@ public class LoginTask extends BaseAsyncTask<User, Void, RetError> {
 	protected RetError doInBackground(User... params) {
 		user = params[0];
 		RetError ret = user.login();
+		System.out.println("message::::::::==" + ret.getMessage());
 		return ret;
 	}
 }

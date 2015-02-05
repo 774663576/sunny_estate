@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sunnyestate.R;
 import com.sunnyestate.data.CategoryDataDetail;
 import com.sunnyestate.utils.UniversalImageLoadTool;
 import com.sunnyestate.utils.Utils;
-import com.sunnyestate.views.MTextView;
 
 public class CategoryAdapter extends BaseAdapter {
 	private Context mContext;
@@ -53,27 +53,32 @@ public class CategoryAdapter extends BaseAdapter {
 					.findViewById(R.id.img_logo);
 			holder.img_sweet = (ImageView) convertView
 					.findViewById(R.id.img_sweet);
-			holder.txt_title = (MTextView) convertView
+			holder.txt_title = (TextView) convertView
 					.findViewById(R.id.txt_title);
 			holder.txt_price = (TextView) convertView
 					.findViewById(R.id.txt_price);
 			holder.txt_member_price = (TextView) convertView
 					.findViewById(R.id.txt_member_price);
+			holder.ietm_layout = (RelativeLayout) convertView
+					.findViewById(R.id.item_layout);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		holder.ietm_layout
+				.setLayoutParams(new RelativeLayout.LayoutParams(
+						LayoutParams.MATCH_PARENT, Utils
+								.getSecreenHeight(mContext) / 3));
 		LayoutParams layoutParams = holder.img_logo.getLayoutParams();
-		layoutParams.height = Utils.getSecreenHeight(mContext) / 4;
+		layoutParams.height = Utils.getSecreenHeight(mContext) / 5;
 		layoutParams.width = Utils.getSecreenWidth(mContext) / 3;
 		holder.img_logo.setLayoutParams(layoutParams);
 		CategoryDataDetail detail = detailList.get(position);
-		UniversalImageLoadTool.disPlay(detail.getImage_url(), holder.img_logo,
+		UniversalImageLoadTool.disPlay(detail.getDefaultimg(), holder.img_logo,
 				R.drawable.img1);
-		holder.txt_title.setMText(detail.getTitle());
-		holder.txt_price.setText("гд" + detail.getPrice() / 100 + ".00");
-		holder.txt_member_price.setText("гд" + detail.getMember_price() / 100
-				+ ".00");
+		holder.txt_title.setText(detail.getProducttile());
+		holder.txt_price.setText("гд" + detail.getOriginalprice() + "0");
+		holder.txt_member_price.setText("гд" + detail.getPrice() + "0");
 		if (detail.getSweet() == 0) {
 			holder.img_sweet.setVisibility(View.GONE);
 		} else if (detail.getSweet() == 1) {
@@ -91,9 +96,10 @@ public class CategoryAdapter extends BaseAdapter {
 	}
 
 	class ViewHolder {
+		RelativeLayout ietm_layout;
 		ImageView img_sweet;
 		ImageView img_logo;
-		MTextView txt_title;
+		TextView txt_title;
 		TextView txt_price;
 		TextView txt_member_price;
 	}

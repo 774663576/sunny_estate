@@ -2,7 +2,6 @@ package com.sunnyestate.task;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.utils.ToastUtil;
@@ -34,8 +33,12 @@ public abstract class BaseAsyncTask<Params, Progress, Result> extends
 	protected void onPostExecute(RetError result) {
 		if (result instanceof RetError) {
 			if (result != RetError.NONE) {
-				ToastUtil.showToast(RetError.toText((RetError) result),
-						Toast.LENGTH_SHORT);
+				if ("".equals(result.getMessage())) {
+					ToastUtil.showToast("²Ù×÷Ê§°Ü");
+				} else {
+					ToastUtil.showToast(result.getMessage());
+				}
+
 			}
 		}
 		if (mCallBack != null) {

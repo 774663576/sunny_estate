@@ -98,12 +98,11 @@ public class AdressActivity extends BaseActivity {
 		} else if (requestCode == 400) {
 			int position = data.getIntExtra("position", 0);
 			Adress adress = (Adress) data.getSerializableExtra("adress");
-			lists.get(position).setProvincename(adress.getProvincename());
-			lists.get(position).setAreaname(adress.getAreaname());
-			lists.get(position).setDetail(adress.getDetail());
+			lists.get(position).setRegion(adress.getRegion());
+			lists.get(position).setFulladdress(adress.getFulladdress());
+			lists.get(position).setConsgneedname(adress.getConsgneedname());
 			lists.get(position).setPhone(adress.getPhone());
-			lists.get(position).setPostcode(adress.getPostcode());
-			lists.get(position).setReceiver(adress.getReceiver());
+			lists.get(position).setZip(adress.getZip());
 			adapter.notifyDataSetChanged();
 			// lists.get(position).setStatus(Status.UPDATE);
 			// lists.get(position).write(DBUtils.getDBsa(2));

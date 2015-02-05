@@ -30,8 +30,17 @@ public class CategoryDataTask extends
 				return ret;
 			}
 		}
-		ret = data.refushCategoryData("cid=" + cid + "&filter=" + filter_id
-				+ "-" + filter_item_id);
+		String url = "";
+		if (cid != 0) {
+			url += "type/" + cid;
+		}
+		if (filter_id != 0 && filter_item_id != 0) {
+			url += "/f" + filter_id;
+		}
+		if (filter_item_id != 0) {
+			url += "/" + filter_item_id;
+		}
+		ret = data.refushCategoryData(url);
 		return ret;
 	}
 }

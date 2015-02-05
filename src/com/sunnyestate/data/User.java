@@ -1,81 +1,43 @@
 package com.sunnyestate.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.utils.HttpUrlHelper;
+import com.sunnyestate.utils.SharedUtils;
 
 public class User extends BaseData {
 	private static final String FREEDBACK_API = "feedback.html";
-	private static final String REGISTER_API = "userreg.html";
-	private static final String SEND_CODE_API = "sendvcode.html";
-	private static final String LOGIN_API = "userlogin.html";
-	private static final String FIND_PASSWORD_API = "getpwd.html";
+	private static final String REGISTER_API = "userReg";
+	private static final String SEND_CODE_API = "sendMessage";
+	private static final String LOGIN_API = "userLogin";
+	private static final String FIND_PASSWORD_API = "pwdGet";
+	private static final String EDIT_PASSWORD_API = "pwdUpdate";
 
 	private int uid;
 	private String mobile = "";
 	private String pwd = "";
 	private String username = "";
 	private String nickname = "";
+	private int sex;
+	private String rname = "";
+	private String avatar = "";
+	private String areaval = "";
+	private String addressval = "";
+	private String birthday = "";
 	private int score;
-	private int level;
-	private String headurl = "";
+	private String levels = "";
 
-	public String getHeadurl() {
-		return headurl;
+	public int getUid() {
+		return uid;
 	}
 
-	public void setHeadurl(String headurl) {
-		this.headurl = headurl;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public User(int uid) {
+	public void setUid(int uid) {
 		this.uid = uid;
-	}
-
-	public User() {
 	}
 
 	public String getMobile() {
@@ -94,12 +56,84 @@ public class User extends BaseData {
 		this.pwd = pwd;
 	}
 
-	public int getUid() {
-		return uid;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUid(int uid) {
-		this.uid = uid;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public int getSex() {
+		return sex;
+	}
+
+	public void setSex(int sex) {
+		this.sex = sex;
+	}
+
+	public String getRname() {
+		return rname;
+	}
+
+	public void setRname(String rname) {
+		this.rname = rname;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getAreaval() {
+		return areaval;
+	}
+
+	public void setAreaval(String areaval) {
+		this.areaval = areaval;
+	}
+
+	public String getAddressval() {
+		return addressval;
+	}
+
+	public void setAddressval(String addressval) {
+		this.addressval = addressval;
+	}
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public String getLevels() {
+		return levels;
+	}
+
+	public void setLevels(String levels) {
+		this.levels = levels;
 	}
 
 	/**
@@ -123,9 +157,50 @@ public class User extends BaseData {
 	 * @return
 	 */
 	public RetError getVerfityCodeError() {
-		HttpUrlHelper.getUrlData(SEND_CODE_API + "?mobile=" + mobile);
-		return RetError.NONE;
+		RetError ret = RetError.NONE;
 
+		String result = HttpUrlHelper.getUrlData(SEND_CODE_API + "/mobile/"
+				+ mobile);
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		return ret;
+	}
+
+	/**
+	 * ÐÞ¸ÄÃÜÂë
+	 * 
+	 * @return
+	 */
+	public RetError edidPwd(String old_pwd, String new_pwd) {
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(EDIT_PASSWORD_API + "/oldpwd/"
+				+ old_pwd + "/newpwd/" + new_pwd + "/username/"
+				+ SharedUtils.getUserName() + "/password/"
+				+ SharedUtils.getPasswordKey());
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		SharedUtils.setPasswordKey(message);
+		return ret;
 	}
 
 	/**
@@ -134,9 +209,22 @@ public class User extends BaseData {
 	 * @return
 	 */
 	public RetError findPassword() {
-		HttpUrlHelper.getUrlData(FIND_PASSWORD_API + "?mobile=" + mobile);
-		return RetError.NONE;
-
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(FIND_PASSWORD_API
+				+ "/username/" + username);
+		if (result == null) {
+			return RetError.INVALID;
+		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		return ret;
 	}
 
 	/**
@@ -146,34 +234,81 @@ public class User extends BaseData {
 	 * @return
 	 */
 	public RetError register(String code) {
-		String result = HttpUrlHelper.getUrlData(REGISTER_API + "?mobile="
-				+ mobile + "&pwd=" + pwd + "&vcode=" + code);
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(REGISTER_API + "/username/"
+				+ username + "/password/" + pwd + "/mobile/" + mobile
+				+ "/code/" + code);
 		if (result == null) {
 			return RetError.INVALID;
 		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
 			NodeList nodes = rootElement.getElementsByTagName("userinfo");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
-				this.uid = getIntValueByTagName(e, "userid");
-				this.level = getIntValueByTagName(e, "level");
-				this.nickname = getValueByTagName(e, "nickname");
 				this.score = getIntValueByTagName(e, "score");
 				this.username = getValueByTagName(e, "username");
-				this.headurl = getValueByTagName(e, "headurl");
-				return RetError.NONE;
+				this.addressval = getValueByTagName(e, "addressval");
+				this.areaval = getValueByTagName(e, "areaval");
+				this.avatar = getValueByTagName(e, "avatar");
+				this.birthday = getValueByTagName(e, "birthday");
+				this.levels = getValueByTagName(e, "levels");
+				this.nickname = getValueByTagName(e, "nickname");
+				this.rname = getValueByTagName(e, "rname");
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return RetError.INVALID;
+
+	}
+
+	public RetError getUserInfo() {
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData("userLoginByback"
+				+ "/username/" + SharedUtils.getUserName() + "/password/"
+				+ SharedUtils.getPasswordKey());
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		ret.setMessage(message);
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
+		try {
+			NodeList nodes = rootElement.getElementsByTagName("userinfo");
+			if (nodes != null && nodes.getLength() > 0) {
+				Element e = (Element) nodes.item(0);
+				this.score = getIntValueByTagName(e, "score");
+				this.username = getValueByTagName(e, "username");
+				this.addressval = getValueByTagName(e, "addressval");
+				this.areaval = getValueByTagName(e, "areaval");
+				this.avatar = getValueByTagName(e, "avatar");
+				this.birthday = getValueByTagName(e, "birthday");
+				this.levels = getValueByTagName(e, "levels");
+				this.nickname = getValueByTagName(e, "nickname");
+				this.rname = getValueByTagName(e, "rname");
+				return ret;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return RetError.INVALID;
+
 	}
 
 	/**
@@ -182,33 +317,39 @@ public class User extends BaseData {
 	 * @return
 	 */
 	public RetError login() {
-		String result = HttpUrlHelper.getUrlData(LOGIN_API + "?mobile="
-				+ mobile + "&pwd=" + pwd);
-		if (result == null) {
-			return RetError.INVALID;
+		RetError ret = RetError.NONE;
+		String result = HttpUrlHelper.getUrlData(LOGIN_API + "/username/"
+				+ username + "/password/" + pwd);
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		ret.setMessage(message);
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
 		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
 			NodeList nodes = rootElement.getElementsByTagName("userinfo");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
-				this.uid = getIntValueByTagName(e, "userid");
-				this.level = getIntValueByTagName(e, "level");
-				this.nickname = getValueByTagName(e, "nickname");
 				this.score = getIntValueByTagName(e, "score");
 				this.username = getValueByTagName(e, "username");
-				this.headurl = getValueByTagName(e, "headurl");
-				return RetError.NONE;
+				this.addressval = getValueByTagName(e, "addressval");
+				this.areaval = getValueByTagName(e, "areaval");
+				this.avatar = getValueByTagName(e, "avatar");
+				this.birthday = getValueByTagName(e, "birthday");
+				this.levels = getValueByTagName(e, "levels");
+				this.nickname = getValueByTagName(e, "nickname");
+				this.rname = getValueByTagName(e, "rname");
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return RetError.INVALID;
+
 	}
 }

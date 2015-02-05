@@ -26,7 +26,7 @@ public class FreedBackActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_freed_back);
-		user = new User(0);
+		user = new User();
 		initView();
 	}
 
@@ -50,7 +50,7 @@ public class FreedBackActivity extends BaseActivity {
 			finishThisActivity();
 			break;
 		case R.id.btn_submit:
-			if (SharedUtils.getIntUid() == 0) {
+			if ("".equals(SharedUtils.getPasswordKey())) {
 				ToastUtil.showToast("ÇëÏÈµÇÂ¼");
 				return;
 			}

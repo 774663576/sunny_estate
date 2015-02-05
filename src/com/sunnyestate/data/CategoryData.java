@@ -1,14 +1,8 @@
 package com.sunnyestate.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -16,8 +10,8 @@ import com.sunnyestate.enums.RetError;
 import com.sunnyestate.utils.HttpUrlHelper;
 
 public class CategoryData extends BaseData {
-	private static final String CATEGORY_LIST_API = "category.html";
-	private static final String CATEGORY_DETAILS_API = "getlist.html";
+	private static final String CATEGORY_LIST_API = "category";
+	private static final String CATEGORY_DETAILS_API = "getlist";
 	private List<Category> categoryList = new ArrayList<Category>();
 	private List<CategoryDataDetail> detailList = new ArrayList<CategoryDataDetail>();
 	private String nextPage = "";
@@ -48,19 +42,23 @@ public class CategoryData extends BaseData {
 
 	public RetError refushCategoryData(String url) {
 		detailList.clear();
-		String result = HttpUrlHelper.getUrlData(CATEGORY_DETAILS_API + "?"
+		String result = HttpUrlHelper.getUrlData(CATEGORY_DETAILS_API + "/"
 				+ url);
+		RetError ret = RetError.NONE;
 		if (result == null) {
 			return RetError.INVALID;
 		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
 			NodeList nodes = rootElement.getElementsByTagName("category");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
@@ -73,16 +71,28 @@ public class CategoryData extends BaseData {
 
 						CategoryDataDetail detail = new CategoryDataDetail();
 						detail.setId(getIntValueByTagName(e, "id"));
-						detail.setTitle(getValueByTagName(e, "title"));
-						detail.setPrice(getIntValueByTagName(e, "price"));
-						detail.setMember_price(getIntValueByTagName(e,
-								"memberprice"));
-						detail.setImage_url(getValueByTagName(e, "imageurl"));
-						detail.setSweet(getIntValueByTagName(e, "td"));
+						detail.setProducttype(getIntValueByTagName(e,
+								"producttype"));
+						detail.setProducttile(getValueByTagName(e,
+								"producttitle"));
+						detail.setDefaultimg(getValueByTagName(e, "defaultimg"));
+						detail.setSmalltitle(getValueByTagName(e, "smalltitle"));
+						detail.setDescription(getValueByTagName(e,
+								"description"));
+						detail.setPrice(getFloatValueByTagName(e, "price"));
+						detail.setOriginalprice(getFloatValueByTagName(e,
+								"originalprice"));
+						detail.setNotproduct(getIntValueByTagName(e,
+								"notproduct"));
+						detail.setBrands(getIntValueByTagName(e, "brands"));
+						detail.setSweet(getIntValueByTagName(e, "sweet"));
+						detail.setTypes(getIntValueByTagName(e, "types"));
+						detail.setIstop(getIntValueByTagName(e, "istop"));
+						detail.setConfiginfo(getValueByTagName(e, "configinfo"));
 						detailList.add(detail);
 					}
 				}
-				return RetError.NONE;
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,17 +103,21 @@ public class CategoryData extends BaseData {
 	public RetError loadMore(String url) {
 		detailList.clear();
 		String result = HttpUrlHelper.getUrlDataLoadMore(url);
+		RetError ret = RetError.NONE;
 		if (result == null) {
 			return RetError.INVALID;
 		}
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element rootElement = (Element) resultArr[1];
 		try {
-			InputStream inputStream = new ByteArrayInputStream(
-					result.getBytes());
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(inputStream);
-			Element rootElement = doc.getDocumentElement();
 			NodeList nodes = rootElement.getElementsByTagName("category");
 			if (nodes != null && nodes.getLength() > 0) {
 				Element e = (Element) nodes.item(0);
@@ -113,19 +127,30 @@ public class CategoryData extends BaseData {
 				if (nodes != null) {
 					for (int i = 0; i < nodes.getLength(); i++) {
 						e = (Element) nodes.item(i);
-
 						CategoryDataDetail detail = new CategoryDataDetail();
 						detail.setId(getIntValueByTagName(e, "id"));
-						detail.setTitle(getValueByTagName(e, "title"));
-						detail.setPrice(getIntValueByTagName(e, "price"));
-						detail.setMember_price(getIntValueByTagName(e,
-								"memberprice"));
-						detail.setImage_url(getValueByTagName(e, "imageurl"));
-						detail.setSweet(getIntValueByTagName(e, "td"));
+						detail.setProducttype(getIntValueByTagName(e,
+								"producttype"));
+						detail.setProducttile(getValueByTagName(e,
+								"producttitle"));
+						detail.setDefaultimg(getValueByTagName(e, "defaultimg"));
+						detail.setSmalltitle(getValueByTagName(e, "smalltitle"));
+						detail.setDescription(getValueByTagName(e,
+								"description"));
+						detail.setPrice(getFloatValueByTagName(e, "price"));
+						detail.setOriginalprice(getFloatValueByTagName(e,
+								"originalprice"));
+						detail.setNotproduct(getIntValueByTagName(e,
+								"notproduct"));
+						detail.setBrands(getIntValueByTagName(e, "brands"));
+						detail.setSweet(getIntValueByTagName(e, "sweet"));
+						detail.setTypes(getIntValueByTagName(e, "types"));
+						detail.setIstop(getIntValueByTagName(e, "istop"));
+						detail.setConfiginfo(getValueByTagName(e, "configinfo"));
 						detailList.add(detail);
 					}
 				}
-				return RetError.NONE;
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,16 +160,22 @@ public class CategoryData extends BaseData {
 
 	public RetError refushCategoryList() {
 		String result = HttpUrlHelper.getUrlData(CATEGORY_LIST_API);
+		RetError ret = RetError.NONE;
 		if (result == null) {
 			return RetError.INVALID;
 		}
-		InputStream inputStream = new ByteArrayInputStream(result.getBytes());
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
+		int res_code = -1;
+		Object[] resultArr = getRootElement(result);
+		res_code = (Integer) resultArr[0];
+		String message = (String) resultArr[2];
+		if (res_code != 0) {
+			ret = RetError.INVALID;
+			ret.setMessage(message);
+			return ret;
+		}
+		Element root = (Element) resultArr[1];
 		try {
-			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(inputStream);
-			Element root = doc.getDocumentElement();
+
 			NodeList categorysNodeList = root.getElementsByTagName("categorys");
 			if (categorysNodeList != null && categorysNodeList.getLength() > 0) {
 				Element e_categorys = (Element) categorysNodeList.item(0);
@@ -199,7 +230,7 @@ public class CategoryData extends BaseData {
 						categoryList.add(category);
 					}
 				}
-				return RetError.NONE;
+				return ret;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

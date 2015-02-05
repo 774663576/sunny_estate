@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.sunnyestate.EditPassWordActivity;
 import com.sunnyestate.LoginAndRegisterActivity;
 import com.sunnyestate.MyApplation;
 import com.sunnyestate.PersonalCentenDingDan;
@@ -65,8 +66,10 @@ public class MyFragment extends Fragment implements OnClickListener,
 	private LinearLayout layout_login;
 	private TextView txt_nick_name;
 	private ImageView img_more;
+	private TextView txt_member_state;
 
 	private PersonalCenter perCenter;
+	private PersonalCentenDingDan dingDan_view;
 
 	private SelectPicPopwindow pic_pop;
 
@@ -94,6 +97,8 @@ public class MyFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initView() {
+		txt_member_state = (TextView) getView().findViewById(
+				R.id.txt_member_state);
 		btn_register = (Button) getView().findViewById(R.id.btn_register);
 		img_more = (ImageView) getView().findViewById(R.id.img_more);
 		txt_nick_name = (TextView) getView().findViewById(R.id.txt_nick_name);
@@ -111,8 +116,9 @@ public class MyFragment extends Fragment implements OnClickListener,
 		txt_title = (TextView) getView().findViewById(R.id.txt_title);
 		img_dingdan = (ImageView) getView().findViewById(R.id.img_dingdan);
 		setListener();
-		if (SharedUtils.getIntUid() != 0) {
+		if (!SharedUtils.getPasswordKey().equals("")) {
 			mScrollView.setVisibility(View.VISIBLE);
+			img_more.setVisibility(View.VISIBLE);
 		} else {
 			layout_login.setVisibility(View.VISIBLE);
 		}
@@ -126,7 +132,7 @@ public class MyFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initTab() {
-		perCenter = new PersonalCentenDingDan(getActivity(), this,
+		dingDan_view = new PersonalCentenDingDan(getActivity(), this,
 				mVfFlipper.getChildAt(0));
 
 	}
@@ -138,7 +144,8 @@ public class MyFragment extends Fragment implements OnClickListener,
 
 	private void setValue() {
 		txt_jifen.setText(SharedUtils.getScore() + "·Ö");
-		txt_nick_name.setText(SharedUtils.getNickName());
+		txt_nick_name.setText(SharedUtils.getUserName());
+		txt_member_state.setText(SharedUtils.getLevel());
 	}
 
 	private void setHead(Bitmap bmp, String path) {
@@ -187,6 +194,11 @@ public class MyFragment extends Fragment implements OnClickListener,
 				if (position == 0) {
 					quitPrompt();
 				}
+				if (position == 1) {
+					startActivity(new Intent(getActivity(),
+							EditPassWordActivity.class));
+					Utils.leftOutRightIn(getActivity());
+				}
 			}
 		});
 		pop.show();
@@ -199,6 +211,7 @@ public class MyFragment extends Fragment implements OnClickListener,
 					@Override
 					public void onOKClick() {
 						SharedUtils.clearData();
+						Utils.cleanDatabaseByName(getActivity());
 						MyApplation.exit(true);
 
 					}
@@ -314,6 +327,8 @@ public class MyFragment extends Fragment implements OnClickListener,
 	public void registerBoradcastReceiver() {
 		IntentFilter myIntentFilter = new IntentFilter();
 		myIntentFilter.addAction(Constants.REGISTER_SUCCESS);
+		myIntentFilter.addAction(Constants.REFUSH_MY_ORDER_LIST);
+
 		getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
 	}
 
@@ -326,9 +341,13 @@ public class MyFragment extends Fragment implements OnClickListener,
 			String action = intent.getAction();
 			if (action.equals(Constants.REGISTER_SUCCESS)) {
 				mScrollView.setVisibility(View.VISIBLE);
+				img_more.setVisibility(View.VISIBLE);
 				layout_login.setVisibility(View.GONE);
 				txt_jifen.setText(SharedUtils.getScore() + "·Ö");
-				txt_nick_name.setText(SharedUtils.getNickName());
+				txt_nick_name.setText(SharedUtils.getUserName());
+				dingDan_view.getOrderList();
+			} else if (action.equals(Constants.REFUSH_MY_ORDER_LIST)) {
+				dingDan_view.getOrderList();
 			}
 		}
 	};

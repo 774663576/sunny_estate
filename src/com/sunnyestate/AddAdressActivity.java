@@ -16,16 +16,17 @@ import com.sunnyestate.data.Province;
 import com.sunnyestate.enums.RetError;
 import com.sunnyestate.interfaces.MyEditTextWatcher;
 import com.sunnyestate.interfaces.OnEditFocusChangeListener;
-import com.sunnyestate.popwindow.CityListPopWindow;
-import com.sunnyestate.popwindow.CityListPopWindow.SelectCity;
+import com.sunnyestate.popwindow.CityListPopWindow1;
+import com.sunnyestate.popwindow.CityListPopWindow1.SelectCity;
 import com.sunnyestate.task.AbstractTaskPostCallBack;
 import com.sunnyestate.task.AddAddressTask;
 import com.sunnyestate.task.GetCityListTask;
+import com.sunnyestate.task.UpdateAddressTask;
 import com.sunnyestate.utils.DialogUtil;
 import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.views.MyEditTextDeleteImg;
 
-public class AddAdressActivity extends BaseActivity {
+public class AddAdressActivity extends BaseActivity implements SelectCity {
 	private MyEditTextDeleteImg edit_name;
 	private MyEditTextDeleteImg edit_cellphone;
 	private MyEditTextDeleteImg edit_code;
@@ -37,9 +38,11 @@ public class AddAdressActivity extends BaseActivity {
 	private int position;
 
 	private Dialog dialog;
-	private CityListPopWindow pop;
+	private CityListPopWindow1 pop;
 	private CityListData cityList;
 	private List<Province> lists = new ArrayList<Province>();
+
+	private String area_code = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class AddAdressActivity extends BaseActivity {
 		position = getIntent().getIntExtra("position", 0);
 		initView();
 		if (adr != null) {
+			area_code = adr.getAreaid() + "";
 			setValue();
 		}
 	}
@@ -89,11 +93,11 @@ public class AddAdressActivity extends BaseActivity {
 	}
 
 	private void setValue() {
-		edit_adress.setText(adr.getProvincename() + " " + adr.getAreaname());
-		edit_adress_detail.setText(adr.getDetail());
+		edit_adress.setText(adr.getRegion());
+		edit_adress_detail.setText(adr.getFulladdress());
 		edit_cellphone.setText(adr.getPhone());
-		edit_code.setText(adr.getPostcode());
-		edit_name.setText(adr.getReceiver());
+		edit_code.setText(adr.getZip());
+		edit_name.setText(adr.getConsgneedname());
 	}
 
 	@Override
@@ -113,11 +117,13 @@ public class AddAdressActivity extends BaseActivity {
 		}
 	}
 
-	private int province_position = 0;
-	private int city_position = 0;
-	private int area_postion = 0;
-
 	private void getCityList(final View v) {
+		if (lists.size() != 0) {
+			pop = new CityListPopWindow1(AddAdressActivity.this, v, lists);
+			pop.setmCallBack(AddAdressActivity.this);
+			pop.show();
+			return;
+		}
 		cityList = new CityListData();
 		dialog = DialogUtil.createLoadingDialog(this);
 		dialog.show();
@@ -132,25 +138,8 @@ public class AddAdressActivity extends BaseActivity {
 					return;
 				}
 				lists = cityList.getLists();
-				pop = new CityListPopWindow(AddAdressActivity.this, v, lists);
-				pop.setmCallBack(new SelectCity() {
-					@Override
-					public void selectCity(int province_po, int city_po,
-							int area_po) {
-						province_position = province_po;
-						city_position = city_po;
-						area_postion = area_po;
-						edit_adress.setText(lists.get(province_po)
-								.getProvince_name()
-								+ " "
-								+ lists.get(province_po).getCityLists()
-										.get(city_po).getCity_name()
-								+ " "
-								+ lists.get(province_po).getCityLists()
-										.get(city_po).getAreaLists()
-										.get(area_po).getArea_name());
-					}
-				});
+				pop = new CityListPopWindow1(AddAdressActivity.this, v, lists);
+				pop.setmCallBack(AddAdressActivity.this);
 				pop.show();
 			}
 		});
@@ -171,13 +160,41 @@ public class AddAdressActivity extends BaseActivity {
 		dialog = DialogUtil.createLoadingDialog(this);
 		dialog.show();
 		final Adress adress = new Adress();
-
-		adress.setProvincename(adress_str);
-		adress.setAreaname("");
-		adress.setDetail(adress_detail);
+		adress.setFulladdress(adress_detail);
 		adress.setPhone(cellphone);
-		adress.setPostcode(code);
-		adress.setReceiver(name);
+		adress.setZip(code);
+		adress.setRegion(adress_str);
+		adress.setAreaid(Integer.valueOf(area_code));
+		adress.setConsgneedname(name);
+		if (adr != null) {
+			update(adress);
+			return;
+		}
+		add(adress);
+	}
+
+	private void update(final Adress adress) {
+		adress.setId(adr.getId());
+		UpdateAddressTask task = new UpdateAddressTask();
+		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
+			public void taskFinish(RetError result) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				if (result != RetError.NONE) {
+					return;
+				}
+				Intent intent = new Intent();
+				intent.putExtra("adress", adress);
+				intent.putExtra("position", position);
+				setResult(400, intent);
+				finishThisActivity();
+			};
+		});
+		task.executeParallel(adress);
+	}
+
+	private void add(final Adress adress) {
 		AddAddressTask task = new AddAddressTask();
 		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
 			public void taskFinish(RetError result) {
@@ -199,5 +216,11 @@ public class AddAdressActivity extends BaseActivity {
 			};
 		});
 		task.executeParallel(adress);
+	}
+
+	@Override
+	public void selectCity(String region, String area_code) {
+		this.area_code = area_code;
+		edit_adress.setText(region);
 	}
 }

@@ -39,11 +39,12 @@ public class PersonalCentenDingDan extends PersonalCenter implements
 			View contentRootView) {
 		super(mContext, fragment, contentRootView);
 		setValue();
-		list = new OrderList(SharedUtils.getIntUid());
-		if (SharedUtils.getIntUid() != 0) {
+		list = new OrderList();
+		if (!"".equals(SharedUtils.getPasswordKey())) {
+			dialog = DialogUtil.createLoadingDialog(mContext);
+			dialog.show();
 			getOrderList();
 		}
-
 	}
 
 	@Override
@@ -71,9 +72,8 @@ public class PersonalCentenDingDan extends PersonalCenter implements
 		Utils.leftOutRightIn(mContext);
 	}
 
-	private void getOrderList() {
-		dialog = DialogUtil.createLoadingDialog(mContext);
-		dialog.show();
+	public void getOrderList() {
+
 		GetMyOrderListTask task = new GetMyOrderListTask();
 		task.setmCallBack(new AbstractTaskPostCallBack<RetError>() {
 			@Override
@@ -84,6 +84,7 @@ public class PersonalCentenDingDan extends PersonalCenter implements
 				if (result != RetError.NONE) {
 					return;
 				}
+				lists.clear();
 				lists.addAll(list.getList());
 				adpater.notifyDataSetChanged();
 			}

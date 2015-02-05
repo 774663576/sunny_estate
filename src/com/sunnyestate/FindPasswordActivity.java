@@ -16,7 +16,7 @@ import com.sunnyestate.utils.ToastUtil;
 import com.sunnyestate.views.MyEditTextDeleteImg;
 
 public class FindPasswordActivity extends BaseActivity {
-	private MyEditTextDeleteImg edit_telphone;
+	private MyEditTextDeleteImg edit_user_name;
 	private Button btn_finish;
 
 	private Dialog dialog;
@@ -30,16 +30,15 @@ public class FindPasswordActivity extends BaseActivity {
 
 	private void initView() {
 		btn_finish = (Button) findViewById(R.id.btn_finish);
-		edit_telphone = (MyEditTextDeleteImg) findViewById(R.id.edit_telphone);
-		edit_telphone.setTag("phone_num");
+		edit_user_name = (MyEditTextDeleteImg) findViewById(R.id.edit_user_name);
 		setListener();
 	}
 
 	private void setListener() {
-		edit_telphone.setOnFocusChangeListener(new OnEditFocusChangeListener(
-				edit_telphone, this));
-		edit_telphone.addTextChangedListener(new MyEditTextWatcher(
-				edit_telphone, this));
+		edit_user_name.setOnFocusChangeListener(new OnEditFocusChangeListener(
+				edit_user_name, this));
+		edit_user_name.addTextChangedListener(new MyEditTextWatcher(
+				edit_user_name, this));
 		btn_finish.setOnClickListener(this);
 	}
 
@@ -56,8 +55,8 @@ public class FindPasswordActivity extends BaseActivity {
 	}
 
 	private void getPwd() {
-		String mobile = edit_telphone.getText().toString();
-		if ("".equals(mobile)) {
+		String user_name = edit_user_name.getText().toString();
+		if ("".equals(user_name)) {
 			ToastUtil.showToast("«Î ‰»Î ÷ª˙∫≈");
 			return;
 		}
@@ -78,7 +77,7 @@ public class FindPasswordActivity extends BaseActivity {
 			}
 		});
 		User user = new User();
-		user.setMobile(mobile);
+		user.setUsername(user_name);
 		task.executeParallel(user);
 	}
 }

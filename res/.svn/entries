@@ -1,0 +1,81 @@
+10
+
+dir
+500
+https://114.112.48.148/svn/soniq/android/SunnyEstate/res
+https://114.112.48.148/svn/soniq
+
+
+
+2015-03-04T06:53:39.433750Z
+500
+songbinbin
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+622ea983-2abf-f54b-a409-6da46711c242
+
+
+
+
+
+
+0
+empty
+
+anim
+dir
+
+color
+dir
+
+drawable
+dir
+
+drawable-hdpi
+dir
+
+drawable-ldpi
+dir
+
+drawable-mdpi
+dir
+
+drawable-xhdpi
+dir
+
+drawable-xxhdpi
+dir
+
+layout
+dir
+
+menu
+dir
+
+values
+dir
+
+values-sw600dp
+dir
+
+values-sw720dp-land
+dir
+
+values-v11
+dir
+
+values-v14
+dir
+

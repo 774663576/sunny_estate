@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data
+END
+HomeCategoryItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/HomeCategoryItem.java
+END
+Province.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/Province.java
+END
+Area.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/Area.java
+END
+AbstractData.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/AbstractData.java
+END
+OrderList.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/OrderList.java
+END
+Recomment.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/Recomment.java
+END
+ShoppingCar.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/ShoppingCar.java
+END
+City.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/City.java
+END
+User.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/User.java
+END
+ShoppingCarList.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/ShoppingCarList.java
+END
+CategoryFilterItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/CategoryFilterItem.java
+END
+HomeData.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/HomeData.java
+END
+CategoryData.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/CategoryData.java
+END
+OrderItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/OrderItem.java
+END
+Category.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/Category.java
+END
+HomeCategory.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/HomeCategory.java
+END
+BaseData.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/BaseData.java
+END
+CategoryDataDetail.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/CategoryDataDetail.java
+END
+OrderData.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/OrderData.java
+END
+Adress.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/Adress.java
+END
+CategoryFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/CategoryFilter.java
+END
+AdressList.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/AdressList.java
+END
+CityListData.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/CityListData.java
+END
+IData.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/data/IData.java
+END

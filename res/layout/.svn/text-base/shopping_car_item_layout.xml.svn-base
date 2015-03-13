@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center"
+    android:paddingBottom="8dip"
+    android:paddingTop="8dip" >
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="5dip"
+        android:background="@drawable/checkbox"
+        android:button="@null"
+        android:checked="false" />
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="80dip"
+        android:layout_height="100dip"
+        android:layout_marginRight="6dip"
+        android:background="@drawable/img_bg"
+        android:padding="5dip"
+        android:paddingBottom="3dip"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dip"
+        android:orientation="vertical"
+        android:paddingTop="10dip" >
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="澳大利亚进口葡萄酒 星力佳酿1500K赤霞珠红葡萄酒 葡萄酒750ml"
+            android:textColor="#2a2a2a"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/txt_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dip"
+                android:paddingTop="5dip"
+                android:text="商品价格$520.00"
+                android:textColor="#2a2a2a"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_member_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dip"
+                android:paddingLeft="10dip"
+                android:paddingTop="5dip"
+                android:text="商品价格$520.00"
+                android:textColor="#2a2a2a"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <RelativeLayout
+                android:id="@+id/layout_input_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="5dip"
+                android:visibility="invisible" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/img_edit_finish" >
+
+                    <ImageView
+                        android:id="@+id/img_dec"
+                        android:layout_width="35dip"
+                        android:layout_height="35dip"
+                        android:src="@drawable/btn_dec" />
+
+                    <EditText
+                        android:id="@+id/edit_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_weight="1"
+                        android:background="@drawable/shopping_car_count_bg"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:minWidth="50dip"
+                        android:paddingLeft="5dip"
+                        android:paddingRight="5dip"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" >
+                    </EditText>
+
+                    <ImageView
+                        android:id="@+id/img_inc"
+                        android:layout_width="35dip"
+                        android:layout_height="35dip"
+                        android:layout_marginLeft="5dip"
+                        android:src="@drawable/btn_inc" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/img_edit_finish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/edit_finish" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/txt_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="×1"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/img_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/car_edit_count" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

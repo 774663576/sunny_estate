@@ -70,6 +70,10 @@
             android:label="@string/title_activity_welcome"
             android:screenOrientation="portrait" >
         </activity>
+
+        <service android:name="com.sunnyestate.service.UpdateService" >
+        </service>
+
         <activity
             android:name="com.sunnyestate.ProductDetailActivity"
             android:label="@string/title_activity_product_detail"
@@ -123,6 +127,21 @@
         <activity
             android:name="com.sunnyestate.SelectPayActivity"
             android:label="@string/title_activity_select_pay"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.sunnyestate.OrderDetailActivity"
+            android:label="@string/title_activity_order_detail"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.sunnyestate.AgainBuyActivity"
+            android:label="@string/title_activity_again_buy"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.sunnyestate.WebPageActivity"
+            android:label="@string/title_activity_web_page"
             android:screenOrientation="portrait" >
         </activity>
     </application>

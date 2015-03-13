@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task
+END
+BaseAsyncTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/BaseAsyncTask.java
+END
+UpdateAddressTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/UpdateAddressTask.java
+END
+GetMyOrderListTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/GetMyOrderListTask.java
+END
+DelAddressTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/DelAddressTask.java
+END
+LoginTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/LoginTask.java
+END
+CategoryDataTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/CategoryDataTask.java
+END
+AbstractTaskPostCallBack.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/AbstractTaskPostCallBack.java
+END
+GetDetailTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/GetDetailTask.java
+END
+TaskPostCallBack.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/TaskPostCallBack.java
+END
+ConfirmDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/ConfirmDialog.java
+END
+DelOrderTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/DelOrderTask.java
+END
+RegisterTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/RegisterTask.java
+END
+GetVerfityCodeTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/GetVerfityCodeTask.java
+END
+FreedBackTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/FreedBackTask.java
+END
+GetCityListTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/GetCityListTask.java
+END
+HomeTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/HomeTask.java
+END
+GetAddressTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/GetAddressTask.java
+END
+SubmitOrderTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/SubmitOrderTask.java
+END
+SetDefaultAddressTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/SetDefaultAddressTask.java
+END
+FindPasswordTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/FindPasswordTask.java
+END
+AddAddressTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/AddAddressTask.java
+END
+EditPwdTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/EditPwdTask.java
+END
+GetUserInfoTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/GetUserInfoTask.java
+END
+UpdateVersionTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/soniq/!svn/ver/500/android/SunnyEstate/src/com/sunnyestate/task/UpdateVersionTask.java
+END
